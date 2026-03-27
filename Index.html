@@ -673,8 +673,15 @@
       color: #fff;
     }
 
-    th.sort-asc::after  { content: ' ↑'; font-size: 10px; }
-    th.sort-desc::after { content: ' ↓'; font-size: 10px; }
+    th.sort-asc::after {
+      content: ' ↑';
+      font-size: 10px;
+    }
+
+    th.sort-desc::after {
+      content: ' ↓';
+      font-size: 10px;
+    }
 
     /* Column search inputs in thead */
     th .col-filter {
@@ -1557,14 +1564,23 @@
       transition: all .12s;
       user-select: none;
     }
-    .prs-purpose-btn:hover { border-color: #b45309; color: #b45309; background: var(--amber-bg); }
+
+    .prs-purpose-btn:hover {
+      border-color: #b45309;
+      color: #b45309;
+      background: var(--amber-bg);
+    }
+
     .prs-purpose-btn:has(input:checked) {
       border-color: #b45309;
       color: #b45309;
       background: var(--amber-bg);
       font-weight: 600;
     }
-    .prs-purpose-btn input[type="radio"] { accent-color: #b45309; }
+
+    .prs-purpose-btn input[type="radio"] {
+      accent-color: #b45309;
+    }
 
     /* ─────────────────────────────────────────────
    TOAST
@@ -2482,7 +2498,7 @@
       right: 0;
       top: calc(100% + 4px);
       z-index: 200;
-      background: var(--bg-1);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
       box-shadow: var(--shadow-lg);
@@ -2525,7 +2541,7 @@
 
     /* ── Resizable table columns ─────────────────────────────────────── */
     .resizable-table {
-      table-layout: fixed;
+      table-layout: auto;
       width: 100%;
     }
 
@@ -2536,7 +2552,9 @@
     }
 
     /* col-resize handles hidden — columns are non-resizable */
-    .col-resize { display: none; }
+    .col-resize {
+      display: none;
+    }
 
     /* ── Icon action buttons ─────────────────────────────────────────── */
     .action-icons {
@@ -3018,8 +3036,8 @@
           <span class="nav-icon" style="font-size:22px;width:auto;color:#fff;">inventory_2</span>
         </div>
         <div>
-          <div class="login-title">CGSO Property System</div>
-          <div class="login-sub">City of Ozamiz — General Services Office</div>
+          <div class="login-title" style="font-size: 18px; font-weight: 700; color: #111110;">A.M.I.S.</div>
+          <div class="login-sub" style="font-size: 12px; color: #111110;">Asset Management and Inventory System</div>
         </div>
       </div>
 
@@ -3050,7 +3068,7 @@
         <div style="text-align:center;margin-bottom:16px;">
           <span class="nav-icon" style="font-size:36px;color:#111110;">lock_reset</span>
           <div style="font-weight:600;font-size:15px;margin-top:6px;color:#111110;">Reset Password</div>
-          <div style="font-size:12px;color:#6b6b66;margin-top:4px;">Enter your username or registered email address
+          <div style="font-size:12px;color:#111110;margin-top:4px;">Enter your username or registered email address
           </div>
         </div>
         <div id="fpErr1" class="login-err"></div>
@@ -3062,7 +3080,7 @@
         <button class="login-btn" id="fpSendBtn" onclick="doSendOTP()">Send OTP</button>
         <div style="text-align:center;margin-top:12px;">
           <button onclick="showLoginStep1()"
-            style="background:none;border:none;color:#6b6b66;font-size:13px;cursor:pointer;">
+            style="background:none;border:none;color:#111110;font-size:13px;cursor:pointer;">
             ← Back to Sign In
           </button>
         </div>
@@ -3134,8 +3152,8 @@
             <span class="nav-icon">inventory_2</span>
           </div>
           <div>
-            <div class="brand-name">City of Ozamiz</div>
-            <div class="brand-sub">General Services Office</div>
+            <div class="brand-name" style="font-size: 16px; font-weight: 700; color: #111110;">A.M.I.S.</div>
+            <div class="brand-sub">City of Ozamiz</div>
           </div>
         </div>
         <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle sidebar"
@@ -3275,8 +3293,8 @@
                   Excel
                 </button>
               </div>
-              <button class="btn btn-ghost" data-require-perm="manage_users" onclick="openImportModal('par')"
-                title="Import records from Excel (Admin only)">
+              <button class="btn btn-ghost" data-require-perm="manage_config" onclick="openImportModal('par')"
+                title="Import records from Excel (Admin/Manager)">
                 <span class="nav-icon" style="font-size:15px;width:auto;">upload_file</span>
                 Import
               </button>
@@ -3368,11 +3386,11 @@
             <table id="regTable" class="resizable-table">
               <colgroup>
                 <col style="width:110px"><!-- Property No. -->
-                <col style="width:22%">  <!-- Name & Description -->
+                <col style="width:22%"> <!-- Name & Description -->
                 <col style="width:120px"><!-- Serial / Plate -->
                 <col style="width:70px"> <!-- Type -->
-                <col style="width:18%">  <!-- Custodian -->
-                <col style="width:16%">  <!-- Department -->
+                <col style="width:18%"> <!-- Custodian -->
+                <col style="width:16%"> <!-- Department -->
                 <col style="width:100px"><!-- Acquired -->
                 <col style="width:100px"><!-- Unit Cost -->
                 <col style="width:105px"><!-- Status -->
@@ -3380,15 +3398,15 @@
               </colgroup>
               <thead>
                 <tr id="regSortRow">
-                  <th class="sortable" data-col="propno"    onclick="sortTable('propno')">Property No.</th>
-                  <th class="sortable" data-col="name"      onclick="sortTable('name')">Name &amp; Description</th>
-                  <th class="sortable" data-col="serial"    onclick="sortTable('serial')">Serial / Plate No.</th>
-                  <th class="sortable" data-col="doctype"   onclick="sortTable('doctype')">Type</th>
+                  <th class="sortable" data-col="propno" onclick="sortTable('propno')">Property No.</th>
+                  <th class="sortable" data-col="name" onclick="sortTable('name')">Name &amp; Description</th>
+                  <th class="sortable" data-col="serial" onclick="sortTable('serial')">Serial / Plate No.</th>
+                  <th class="sortable" data-col="doctype" onclick="sortTable('doctype')">Type</th>
                   <th class="sortable" data-col="custodian" onclick="sortTable('custodian')">Custodian</th>
-                  <th class="sortable" data-col="dept"      onclick="sortTable('dept')">Department</th>
-                  <th class="sortable" data-col="date"      onclick="sortTable('date')">Acquired</th>
-                  <th class="sortable" data-col="cost"      onclick="sortTable('cost')">Unit Cost</th>
-                  <th class="sortable" data-col="status"    onclick="sortTable('status')">Status</th>
+                  <th class="sortable" data-col="dept" onclick="sortTable('dept')">Department</th>
+                  <th class="sortable" data-col="date" onclick="sortTable('date')">Acquired</th>
+                  <th class="sortable" data-col="cost" onclick="sortTable('cost')">Unit Cost</th>
+                  <th class="sortable" data-col="status" onclick="sortTable('status')">Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -3448,7 +3466,7 @@
                   Excel
                 </button>
               </div>
-              <button class="btn btn-ghost" data-require-perm="manage_users" onclick="openImportModal('par')">
+              <button class="btn btn-ghost" data-require-perm="manage_config" onclick="openImportModal('par')">
                 <span class="nav-icon" style="font-size:15px;width:auto;">upload_file</span>
                 Import
               </button>
@@ -3489,9 +3507,9 @@
             <table id="parTable" class="resizable-table">
               <colgroup>
                 <col style="width:110px"><!-- PAR No. -->
-                <col style="width:24%">  <!-- Property / Description -->
-                <col style="width:18%">  <!-- Custodian -->
-                <col style="width:15%">  <!-- Department -->
+                <col style="width:24%"> <!-- Property / Description -->
+                <col style="width:18%"> <!-- Custodian -->
+                <col style="width:15%"> <!-- Department -->
                 <col style="width:100px"><!-- Date Issued -->
                 <col style="width:100px"><!-- Unit Cost -->
                 <col style="width:105px"><!-- Condition -->
@@ -3501,13 +3519,13 @@
               </colgroup>
               <thead>
                 <tr id="parSortRow">
-                  <th class="sortable" data-col="propno"    onclick="sortPAR('propno')">PAR No.</th>
-                  <th class="sortable" data-col="name"      onclick="sortPAR('name')">Property / Description</th>
+                  <th class="sortable" data-col="propno" onclick="sortPAR('propno')">PAR No.</th>
+                  <th class="sortable" data-col="name" onclick="sortPAR('name')">Property / Description</th>
                   <th class="sortable" data-col="custodian" onclick="sortPAR('custodian')">Custodian</th>
-                  <th class="sortable" data-col="dept"      onclick="sortPAR('dept')">Department</th>
-                  <th class="sortable" data-col="date"      onclick="sortPAR('date')">Date Issued</th>
-                  <th class="sortable" data-col="cost"      onclick="sortPAR('cost')">Unit Cost</th>
-                  <th class="sortable" data-col="status"    onclick="sortPAR('status')">Condition</th>
+                  <th class="sortable" data-col="dept" onclick="sortPAR('dept')">Department</th>
+                  <th class="sortable" data-col="date" onclick="sortPAR('date')">Date Issued</th>
+                  <th class="sortable" data-col="cost" onclick="sortPAR('cost')">Unit Cost</th>
+                  <th class="sortable" data-col="status" onclick="sortPAR('status')">Condition</th>
                   <th>Document</th>
                   <th>History</th>
                   <th>Action</th>
@@ -3569,7 +3587,7 @@
                   Excel
                 </button>
               </div>
-              <button class="btn btn-ghost" data-require-perm="manage_users" onclick="openImportModal('ics')">
+              <button class="btn btn-ghost" data-require-perm="manage_config" onclick="openImportModal('ics')">
                 <span class="nav-icon" style="font-size:15px;width:auto;">upload_file</span>
                 Import
               </button>
@@ -3610,9 +3628,9 @@
             <table id="icsTable" class="resizable-table">
               <colgroup>
                 <col style="width:110px"><!-- ICS No. -->
-                <col style="width:24%">  <!-- Property / Description -->
-                <col style="width:18%">  <!-- Custodian -->
-                <col style="width:15%">  <!-- Department -->
+                <col style="width:24%"> <!-- Property / Description -->
+                <col style="width:18%"> <!-- Custodian -->
+                <col style="width:15%"> <!-- Department -->
                 <col style="width:100px"><!-- Date Issued -->
                 <col style="width:100px"><!-- Unit Cost -->
                 <col style="width:105px"><!-- Condition -->
@@ -3622,13 +3640,13 @@
               </colgroup>
               <thead>
                 <tr id="icsSortRow">
-                  <th class="sortable" data-col="propno"    onclick="sortICS('propno')">ICS No.</th>
-                  <th class="sortable" data-col="name"      onclick="sortICS('name')">Property / Description</th>
+                  <th class="sortable" data-col="propno" onclick="sortICS('propno')">ICS No.</th>
+                  <th class="sortable" data-col="name" onclick="sortICS('name')">Property / Description</th>
                   <th class="sortable" data-col="custodian" onclick="sortICS('custodian')">Custodian</th>
-                  <th class="sortable" data-col="dept"      onclick="sortICS('dept')">Department</th>
-                  <th class="sortable" data-col="date"      onclick="sortICS('date')">Date Issued</th>
-                  <th class="sortable" data-col="cost"      onclick="sortICS('cost')">Unit Cost</th>
-                  <th class="sortable" data-col="status"    onclick="sortICS('status')">Condition</th>
+                  <th class="sortable" data-col="dept" onclick="sortICS('dept')">Department</th>
+                  <th class="sortable" data-col="date" onclick="sortICS('date')">Date Issued</th>
+                  <th class="sortable" data-col="cost" onclick="sortICS('cost')">Unit Cost</th>
+                  <th class="sortable" data-col="status" onclick="sortICS('status')">Condition</th>
                   <th>Document</th>
                   <th>History</th>
                   <th>Action</th>
@@ -3679,9 +3697,9 @@
               <div class="export-btn-group">
                 <button class="btn btn-ghost" onclick="exportPRSCSV()">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                    <polyline points="7 10 12 15 17 10"/>
-                    <line x1="12" y1="15" x2="12" y2="3"/>
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
                   Export CSV
                 </button>
@@ -3698,9 +3716,11 @@
             <div class="filter-row">
               <div class="search-wrap">
                 <span class="search-icon">⌕</span>
-                <input type="text" id="prsSearch" placeholder="Search property, officer, department…" autocomplete="off">
+                <input type="text" id="prsSearch" placeholder="Search property, officer, department…"
+                  autocomplete="off">
               </div>
-              <select class="filter-select" id="prsFilterDept" onchange="prsPage=1;renderPRS()" style="max-width:180px;">
+              <select class="filter-select" id="prsFilterDept" onchange="prsPage=1;renderPRS()"
+                style="max-width:180px;">
                 <option value="">All Departments</option>
               </select>
               <select class="filter-select" id="prsFilterType" onchange="prsPage=1;renderPRS()">
@@ -3715,7 +3735,8 @@
                 <option value="Returned to Stock">Returned to Stock</option>
                 <option value="Unserviceable">Unserviceable</option>
               </select>
-              <select class="filter-select" id="prsFilterCustodian" onchange="prsPage=1;renderPRS()" style="max-width:200px;">
+              <select class="filter-select" id="prsFilterCustodian" onchange="prsPage=1;renderPRS()"
+                style="max-width:200px;">
                 <option value="">All Custodians</option>
               </select>
               <div class="filter-spacer"></div>
@@ -3735,15 +3756,15 @@
               </colgroup>
               <thead>
                 <tr id="prsSortRow">
-                  <th class="sortable" data-col="prsNo"      onclick="sortPRS('prsNo')">PRS No.</th>
-                  <th class="sortable" data-col="propno"     onclick="sortPRS('propno')">Prop. No.</th>
-                  <th class="sortable" data-col="name"       onclick="sortPRS('name')">Property / Description</th>
-                  <th class="sortable" data-col="custodian"  onclick="sortPRS('custodian')">Custodian</th>
-                  <th class="sortable" data-col="dept"       onclick="sortPRS('dept')">Department</th>
-                  <th class="sortable" data-col="doctype"    onclick="sortPRS('doctype')">Type</th>
+                  <th class="sortable" data-col="prsNo" onclick="sortPRS('prsNo')">PRS No.</th>
+                  <th class="sortable" data-col="propno" onclick="sortPRS('propno')">Prop. No.</th>
+                  <th class="sortable" data-col="name" onclick="sortPRS('name')">Property / Description</th>
+                  <th class="sortable" data-col="custodian" onclick="sortPRS('custodian')">Custodian</th>
+                  <th class="sortable" data-col="dept" onclick="sortPRS('dept')">Department</th>
+                  <th class="sortable" data-col="doctype" onclick="sortPRS('doctype')">Type</th>
                   <th class="sortable" data-col="prsPurpose" onclick="sortPRS('prsPurpose')">Purpose</th>
-                  <th class="sortable" data-col="prsDate"    onclick="sortPRS('prsDate')">Date Returned</th>
-                  <th class="sortable" data-col="cost"       onclick="sortPRS('cost')">Unit Cost</th>
+                  <th class="sortable" data-col="prsDate" onclick="sortPRS('prsDate')">Date Returned</th>
+                  <th class="sortable" data-col="cost" onclick="sortPRS('cost')">Unit Cost</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -3804,7 +3825,7 @@
                   Excel
                 </button>
               </div>
-              <button class="btn btn-ghost" data-require-perm="manage_users" onclick="openImportModal('rp')">
+              <button class="btn btn-ghost" data-require-perm="manage_config" onclick="openImportModal('rp')">
                 <span class="nav-icon" style="font-size:15px;width:auto;">upload_file</span>
                 Import
               </button>
@@ -3840,7 +3861,8 @@
               <select class="filter-select" id="rpFilterType" onchange="rpCurrentPage=1;renderRealProperty()">
                 <option value="">All Subcategories</option>
               </select>
-              <select class="filter-select" id="rpFilterDept" onchange="rpCurrentPage=1;renderRealProperty()" style="max-width:180px;">
+              <select class="filter-select" id="rpFilterDept" onchange="rpCurrentPage=1;renderRealProperty()"
+                style="max-width:180px;">
                 <option value="">All Departments</option>
               </select>
               <select class="filter-select" id="rpFilterStatus" onchange="rpCurrentPage=1;renderRealProperty()">
@@ -3857,10 +3879,10 @@
               <colgroup>
                 <col style="width:100px"><!-- Record No. -->
                 <col style="width:90px"> <!-- Type -->
-                <col style="width:20%">  <!-- Description -->
-                <col style="width:16%">  <!-- Location -->
+                <col style="width:20%"> <!-- Description -->
+                <col style="width:16%"> <!-- Location -->
                 <col style="width:90px"> <!-- Area sqm -->
-                <col style="width:14%">  <!-- Department -->
+                <col style="width:14%"> <!-- Department -->
                 <col style="width:110px"><!-- Appraised Value -->
                 <col style="width:95px"> <!-- Acq. Date -->
                 <col style="width:95px"> <!-- Status -->
@@ -3869,15 +3891,15 @@
               </colgroup>
               <thead>
                 <tr id="rpSortRow">
-                  <th class="sortable" data-col="recno"       onclick="sortRP('recno')">Record No.</th>
-                  <th class="sortable" data-col="rtype"       onclick="sortRP('rtype')">Type</th>
-                  <th class="sortable" data-col="name"        onclick="sortRP('name')">Description / Name</th>
-                  <th class="sortable" data-col="location"    onclick="sortRP('location')">Location</th>
-                  <th class="sortable" data-col="area"        onclick="sortRP('area')">Area (sqm)</th>
-                  <th class="sortable" data-col="dept"        onclick="sortRP('dept')">Department</th>
+                  <th class="sortable" data-col="recno" onclick="sortRP('recno')">Record No.</th>
+                  <th class="sortable" data-col="rtype" onclick="sortRP('rtype')">Type</th>
+                  <th class="sortable" data-col="name" onclick="sortRP('name')">Description / Name</th>
+                  <th class="sortable" data-col="location" onclick="sortRP('location')">Location</th>
+                  <th class="sortable" data-col="area" onclick="sortRP('area')">Area (sqm)</th>
+                  <th class="sortable" data-col="dept" onclick="sortRP('dept')">Department</th>
                   <th class="sortable" data-col="appraisedval" onclick="sortRP('appraisedval')">Appraised Value</th>
-                  <th class="sortable" data-col="date"        onclick="sortRP('date')">Acq. Date</th>
-                  <th class="sortable" data-col="status"      onclick="sortRP('status')">Status</th>
+                  <th class="sortable" data-col="date" onclick="sortRP('date')">Acq. Date</th>
+                  <th class="sortable" data-col="status" onclick="sortRP('status')">Status</th>
                   <th>Document</th>
                   <th>Action</th>
                 </tr>
@@ -5638,8 +5660,7 @@
           <span class="nav-icon">swap_horiz</span>Transfer
         </button>
         <button class="btn-transfer" id="btnPRS" title="Process Property Return Slip"
-          style="background:var(--amber-bg);color:#b45309;border-color:#fde68a;"
-          data-require-perm="manage_prs">
+          style="background:var(--amber-bg);color:#b45309;border-color:#fde68a;" data-require-perm="manage_prs">
           <span class="nav-icon">assignment_return</span>PRS
         </button>
         <button class="btn btn-primary" id="btnEdit">Edit Record</button>
@@ -6029,7 +6050,7 @@
         </div>
         <div class="modal-head-text">
           <h2>Import Data</h2>
-          <p id="importModalSub">Bulk import records from Excel or CSV — Admin only</p>
+          <p id="importModalSub">Bulk import records from Excel or CSV (Admin/Manager)</p>
         </div>
         <button class="modal-close" onclick="closeImportModal()">✕</button>
       </div>
@@ -6204,7 +6225,9 @@
         <div class="form-grid cols-2" style="gap:14px;">
           <div class="fg span-2">
             <label>Property</label>
-            <div id="prsPropertyDisplay" style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-1);font-weight:500;"></div>
+            <div id="prsPropertyDisplay"
+              style="padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--text-1);font-weight:500;">
+            </div>
           </div>
           <div class="fg">
             <label>PRS No. <span class="req">*</span></label>
@@ -6243,12 +6266,15 @@
           </div>
           <div class="fg span-2">
             <label>Remarks</label>
-            <textarea id="prs-remarks" rows="2" placeholder="Optional remarks or notes…" style="resize:vertical;"></textarea>
+            <textarea id="prs-remarks" rows="2" placeholder="Optional remarks or notes…"
+              style="resize:vertical;"></textarea>
           </div>
         </div>
-        <div style="margin-top:14px;padding:12px 14px;background:var(--amber-bg);border:1px solid #fde68a;border-radius:8px;font-size:12px;color:#92400e;display:flex;gap:8px;align-items:flex-start;">
+        <div
+          style="margin-top:14px;padding:12px 14px;background:var(--amber-bg);border:1px solid #fde68a;border-radius:8px;font-size:12px;color:#92400e;display:flex;gap:8px;align-items:flex-start;">
           <span class="nav-icon" style="font-size:16px;flex-shrink:0;color:#b45309;">warning</span>
-          <div><strong>This action will move the record out of PAR/ICS.</strong> The property will be transferred to PRS Records in Google Sheets. This cannot be undone from the UI.</div>
+          <div><strong>This action will move the record out of PAR/ICS.</strong> The property will be transferred to PRS
+            Records in Google Sheets. This cannot be undone from the UI.</div>
         </div>
       </div>
       <div class="modal-foot">
@@ -6282,9 +6308,9 @@
         <button class="btn btn-ghost" onclick="closeModal('prsPreviewModal')">Close</button>
         <button class="btn btn-primary" onclick="doPrintPRS()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6 9 6 2 18 2 18 9"/>
-            <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
-            <rect x="6" y="14" width="12" height="8"/>
+            <polyline points="6 9 6 2 18 2 18 9" />
+            <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" />
           </svg>
           Print PRS
         </button>
@@ -6299,8 +6325,8 @@
     /* ─────────────────────────────────────
        DATA
     ───────────────────────────────────── */
-    let properties   = [];
-    let prsRecords   = [];   // populated from PRS_Records sheet via hydrateData
+    let properties = [];
+    let prsRecords = [];   // populated from PRS_Records sheet via hydrateData
     const _debouncers = {};
     function debounceUI(key, fn, ms = 250) {
       if (_debouncers[key]) clearTimeout(_debouncers[key]);
@@ -6386,11 +6412,11 @@
     }
 
     function getFiltered() {
-      const q   = ((document.getElementById('searchInput')    || {}).value || '').toLowerCase();
-      const fs  = ((document.getElementById('filterStatus')   || {}).value || '');
-      const ft  = ((document.getElementById('filterType')     || {}).value || '');
-      const fd  = ((document.getElementById('filterDept')     || {}).value || '');
-      const fc  = ((document.getElementById('filterCustodian')|| {}).value || '');
+      const q = ((document.getElementById('searchInput') || {}).value || '').toLowerCase();
+      const fs = ((document.getElementById('filterStatus') || {}).value || '');
+      const ft = ((document.getElementById('filterType') || {}).value || '');
+      const fd = ((document.getElementById('filterDept') || {}).value || '');
+      const fc = ((document.getElementById('filterCustodian') || {}).value || '');
       const fca = ((document.getElementById('filterCategory') || {}).value || '');
       let result = properties.filter(p =>
         (!q || (p.name || '').toLowerCase().includes(q) || (p.propno || '').toLowerCase().includes(q) ||
@@ -6499,13 +6525,13 @@
       function _wire(id, fn) {
         const el = document.getElementById(id);
         if (!el) return;
-        el.addEventListener('input',  fn);
-        el.addEventListener('keyup',  fn);
+        el.addEventListener('input', fn);
+        el.addEventListener('keyup', fn);
         el.addEventListener('search', fn);
       }
       function _attach() {
-        _wire('searchInput', function() { filterTable(); });
-        _wire('prsSearch',   function() { prsPage = 1; renderPRS(); });
+        _wire('searchInput', function () { filterTable(); });
+        _wire('prsSearch', function () { prsPage = 1; renderPRS(); });
       }
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', _attach);
@@ -6590,6 +6616,16 @@
     /* ─────────────────────────────────────
        ADD MODAL
     ───────────────────────────────────── */
+    function formatSignatoryName(nameStr) {
+      if (!nameStr) return '';
+      let s = String(nameStr).trim();
+      if (s.indexOf(',') !== -1) {
+        const parts = s.split(',').map(x => x.trim());
+        s = parts.slice(1).join(' ') + ' ' + parts[0];
+      }
+      return toTitleCase(s.replace(/\s+/g, ' '));
+    }
+
     function toTitleCase(str) {
       const minor = new Set(['of', 'the', 'and', 'or', 'a', 'an', 'in', 'at', 'to', 'for', '&']);
       return str.toLowerCase().split(' ').map((w, i) =>
@@ -7216,7 +7252,7 @@
       renderICS();
       showToast(`"${p.name}" has been deleted.`, 'error');
       if (GAS_ONLINE) gasCall('deleteProperty', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -7282,7 +7318,7 @@
       const sigCell = (label, name, desig, dept, date) => `
     <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:44px;">${label}</div>
     <div style="border-top:1.5px solid #000;padding-top:5px;text-align:center;">
-      <div style="font-weight:700;font-size:11px;min-height:16px;letter-spacing:.01em;">${esc(name)}</div>
+      <div style="font-weight:700;font-size:11px;min-height:16px;letter-spacing:.01em;">${esc(formatSignatoryName(name))}</div>
       <div style="font-size:9px;color:#555;margin-top:2px;">Signature Over Printed Name</div>
       <div style="font-size:10px;font-weight:600;margin-top:7px;min-height:14px;">${esc(desig)}</div>
       <div style="font-size:9px;color:#555;">Designation</div>
@@ -7461,7 +7497,7 @@
       const sigCell = (label, name, desig, dept, date) => `
     <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:44px;">${label}</div>
     <div style="border-top:1.5px solid #000;padding-top:5px;text-align:center;">
-      <div style="font-weight:700;font-size:11px;min-height:16px;letter-spacing:.01em;">${esc(name)}</div>
+      <div style="font-weight:700;font-size:11px;min-height:16px;letter-spacing:.01em;">${esc(formatSignatoryName(name))}</div>
       <div style="font-size:9px;color:#555;margin-top:2px;">Signature Over Printed Name</div>
       <div style="font-size:10px;font-weight:600;margin-top:7px;min-height:14px;">${esc(desig)}</div>
       <div style="font-size:9px;color:#555;">Designation</div>
@@ -8128,8 +8164,8 @@
       if (GAS_ONLINE) gasCall('saveOfficer', eid
         ? officers.find(x => x.id == eid)
         : officers[officers.length - 1]
-      ).then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
-       .catch(() => showToast('Network error — officer saved locally only.', 'error'));
+      ).then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
+        .catch(() => showToast('Network error — officer saved locally only.', 'error'));
     }
 
     function deleteOfficer(id) {
@@ -8141,7 +8177,7 @@
       updateOfficerCount();
       showToast(`"${o.name}" removed from master list.`, 'error');
       if (GAS_ONLINE) gasCall('deleteOfficer', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -8256,8 +8292,8 @@
       if (GAS_ONLINE) gasCall('saveDepartment', eid
         ? departments.find(x => x.id == eid)
         : departments[departments.length - 1]
-      ).then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
-       .catch(() => showToast('Network error — department saved locally only.', 'error'));
+      ).then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
+        .catch(() => showToast('Network error — department saved locally only.', 'error'));
     }
 
     function deleteDept(id) {
@@ -8272,7 +8308,7 @@
       populateOfficerDeptFilter();
       showToast(`"${toTitleCase(d.name)}" deleted.`, 'error');
       if (GAS_ONLINE) gasCall('deleteDepartment', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -8647,7 +8683,7 @@
       if (GAS_ONLINE) {
         const saved = eid ? fundClusters.find(x => x.id == eid) : fundClusters[fundClusters.length - 1];
         gasCall('saveFundCluster', saved)
-          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
           .catch(() => showToast('Network error — fund cluster saved locally only.', 'error'));
       }
     }
@@ -8663,7 +8699,7 @@
       populateFundClusters();
       showToast(`"${fc.code} — ${fc.name}" deleted.`, 'error');
       if (GAS_ONLINE) gasCall('deleteFundCluster', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -8750,7 +8786,7 @@
       if (GAS_ONLINE) {
         const saved = eid ? conditions.find(x => x.id == eid) : conditions[conditions.length - 1];
         gasCall('saveCondition', saved)
-          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
           .catch(() => showToast('Network error — condition saved locally only.', 'error'));
       }
     }
@@ -8766,7 +8802,7 @@
       rebuildConditionDropdowns();
       showToast(`"${c.label}" deleted.`, 'error');
       if (GAS_ONLINE) gasCall('deleteCondition', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -8900,18 +8936,18 @@
 
     // ── Filtered list helper — shared between renderRealProperty and page nav ──
     function _getRpFiltered() {
-      const q  = (document.getElementById('rpSearch')      || { value: '' }).value.toLowerCase();
-      const ft = (document.getElementById('rpFilterType')  || { value: '' }).value;
-      const fd = (document.getElementById('rpFilterDept')  || { value: '' }).value;
-      const fs = (document.getElementById('rpFilterStatus')|| { value: '' }).value;
+      const q = (document.getElementById('rpSearch') || { value: '' }).value.toLowerCase();
+      const ft = (document.getElementById('rpFilterType') || { value: '' }).value;
+      const fd = (document.getElementById('rpFilterDept') || { value: '' }).value;
+      const fs = (document.getElementById('rpFilterStatus') || { value: '' }).value;
       return realProperties.filter(r =>
         (!ft || r.category === ft) &&
         (!fd || r.dept === fd) &&
         (!fs || r.status === fs) &&
-        (!q  || (r.name||'').toLowerCase().includes(q) ||
-                (r.recno||'').toLowerCase().includes(q) ||
-                (r.location||'').toLowerCase().includes(q) ||
-                (r.dept||'').toLowerCase().includes(q))
+        (!q || (r.name || '').toLowerCase().includes(q) ||
+          (r.recno || '').toLowerCase().includes(q) ||
+          (r.location || '').toLowerCase().includes(q) ||
+          (r.dept || '').toLowerCase().includes(q))
       );
     }
 
@@ -9306,7 +9342,7 @@
       showToast(`"${r.name}" deleted.`, 'error');
       renderRealProperty();
       if (GAS_ONLINE) gasCall('deleteRealProperty', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -9388,7 +9424,7 @@
       if (GAS_ONLINE) {
         const saved = eid ? acquisitionModes.find(x => x.id == eid) : acquisitionModes[acquisitionModes.length - 1];
         gasCall('saveAcquisition', saved)
-          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
           .catch(() => showToast('Network error — acquisition mode saved locally only.', 'error'));
       }
     }
@@ -9407,7 +9443,7 @@
       renderAcquisitions();
       renderAcctStatuses();
       if (GAS_ONLINE) gasCall('deleteAcquisition', { id })
-        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+        .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
         .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
     }
 
@@ -9844,7 +9880,7 @@
         if (pwd) payload.password = pwd;
         gasCall('saveUser', payload).then(json => {
           if (!json || !json.ok) {
-            showToast('Sync error: ' + ((json && json.error)||'Unknown'), 'error'); return;
+            showToast('Sync error: ' + ((json && json.error) || 'Unknown'), 'error'); return;
           }
           if (json.tempPassword) {
             showTempPasswordModal(name, json.tempPassword, !!(userToSave && userToSave.email));
@@ -9929,6 +9965,7 @@
     function hasPermission(perm) {
       if (!GAS_USER) return false;
       if (GAS_USER.role === 'Admin') return true;
+      if (GAS_USER.role === 'Manager' && perm === 'manage_prs') return true;
       return (GAS_USER.permissions || []).includes(perm);
     }
 
@@ -9954,7 +9991,7 @@
           // Administration items — Admin only
           visible = isAdmin;
         } else {
-          visible = isAdmin || perms.includes(reqPerm);
+          visible = isAdmin || (role === 'Manager' && reqPerm === 'manage_prs') || perms.includes(reqPerm);
         }
         btn.style.display = visible ? '' : 'none';
       });
@@ -10141,18 +10178,24 @@
     }
 
     // ── Open Transfer modal ───────────────────────────
-    function openTransferModal(propId) {
-      const p = properties.find(x => String(x.id) === String(propId));
+    function openTransferModal(propId, source = 'active') {
+      let p;
+      if (source === 'prs') {
+        p = prsRecords.find(x => String(x.id) === String(propId));
+      } else {
+        p = properties.find(x => String(x.id) === String(propId));
+      }
       if (!p) return;
 
       document.getElementById('tr-propid').value = propId;
-      document.getElementById('tr-current-officer').value = p.custodian || '—';
+      document.getElementById('tr-propid').dataset.source = source;
+      document.getElementById('tr-current-officer').value = p.custodian || 'Returned to Stock';
       document.getElementById('tr-current-dept').value = toTitleCase(p.dept || '') || '—';
 
       // Find date of last assignment
       const hist = getPropHistory(propId);
       const last = hist.length ? hist[hist.length - 1] : null;
-      const lastDate = last ? fmtDate(last.date) : fmtDate(p.date);
+      const lastDate = last ? fmtDate(last.date) : fmtDate(p.date || p.prsDate);
       document.getElementById('tr-current-date').value = lastDate;
 
       // Set default transfer date to today
@@ -10184,7 +10227,8 @@
     }
 
     function saveTransfer() {
-      const propId = parseInt(document.getElementById('tr-propid').value);
+      const propId = document.getElementById('tr-propid').value;
+      const source = document.getElementById('tr-propid').dataset.source || 'active';
       const dept = document.getElementById('tr-dept').value;
       const ofSel = document.getElementById('tr-officer');
       const officer = ofSel.value;
@@ -10197,7 +10241,12 @@
         return;
       }
 
-      const p = properties.find(x => x.id === propId);
+      let p;
+      if (source === 'prs') {
+        p = prsRecords.find(x => String(x.id) === String(propId));
+      } else {
+        p = properties.find(x => String(x.id) === String(propId));
+      }
       if (!p) return;
 
       // Prevent transferring to the same officer
@@ -10206,29 +10255,46 @@
         return;
       }
 
-      // Get designation from selected option
       const optEl = ofSel.querySelector(`option[value="${CSS.escape(officer)}"]`);
       const designation = optEl ? (optEl.dataset.desig || '') : '';
-
-      // Generate a stable id for the history entry so GAS upsertRow works correctly
       const entryId = 'he-' + Date.now();
 
-      // Add history entry
+      // If it's a PRS Transfer, hit the new backend endpoint and resolve immediately.
+      if (source === 'prs') {
+        if (!GAS_ONLINE) {
+          showToast('Cannot transfer from PRS while offline.', 'error'); return;
+        }
+        gasCall('transferPRS', {
+          propId: p.id, officer, designation, dept, date, location, remarks, entryId
+        }).then(res => {
+          if (!res || !res.ok) {
+            showToast('Transfer failed: ' + ((res && res.error) || 'Unknown'), 'error'); return;
+          }
+          // Move from PRS list to Properties list locally
+          prsRecords = prsRecords.filter(x => String(x.id) !== String(propId));
+          properties.push(res.property);
+          addHistoryEntry(propId, {
+            id: entryId, type: 'transfer', officer, designation, dept, date, location,
+            remarks: remarks || 'Re-issued from PRS',
+            recordedBy: getCurrentUser(), recordedAt: new Date().toISOString()
+          });
+          showToast(`"${p.name}" has been transferred to ${officer}.`, 'success');
+          closeModal('transferModal');
+          renderPRS(); renderPAR(); renderICS();
+          updateStats();
+        }).catch(() => showToast('Network error during transfer.', 'error'));
+        return;
+      }
+
+      // --- STANDARD PROPERTY TRANSFER LOGIC ---
       addHistoryEntry(propId, {
-        id: entryId,
-        type: 'transfer',
-        officer,
-        designation,
-        dept,
-        date,
-        location,
+        id: entryId, type: 'transfer', officer, designation, dept, date, location,
         remarks: remarks || 'Transfer of accountability',
         recordedBy: getCurrentUser(),
         recordedAt: new Date().toISOString(),
       });
 
-      // Update the property record's current custodian
-      const idx = properties.findIndex(x => x.id === propId);
+      const idx = properties.findIndex(x => String(x.id) === String(propId));
       properties[idx].custodian = officer;
       properties[idx].designation = designation;
       properties[idx].dept = dept;
@@ -10239,16 +10305,13 @@
       addLog('TRANSFER', p.name, `${p.propno} transferred from ${prevCustodian} → ${officer} (${toTitleCase(dept)})`);
       showToast(`"${p.name}" transferred to ${officer}.`, 'success');
       closeModal('transferModal');
-      renderPAR();
-      renderICS();
-      filterTable();
-      updateStats();
+      renderPAR(); renderICS(); filterTable(); updateStats();
+
       if (GAS_ONLINE) {
-        // Send history entry to backend (server will also update custodian on Properties sheet)
         const histEntry = propHistory[propId].find(e => e.id === entryId);
         if (histEntry) {
           gasCall('saveHistory', Object.assign({ propId }, histEntry))
-            .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+            .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
             .catch(() => showToast('Network error — history saved locally only.', 'error'));
         }
       }
@@ -11726,7 +11789,7 @@
         showToast(`"${u.name}" deleted.`, 'error');
         renderUsers();
         if (GAS_ONLINE) gasCall('deleteUser', { id })
-          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error||'Unknown'), 'error'); })
+          .then(res => { if (res && !res.ok) showToast('Sync error: ' + (res.error || 'Unknown'), 'error'); })
           .catch(() => showToast('Network error — deletion saved locally only.', 'error'));
       }
     }
@@ -11875,7 +11938,7 @@
       const keyOrder = ['propno', 'name', 'serial', 'doctype', 'custodian', 'dept', 'date', 'cost', 'status'];
       keyOrder.forEach((key, i) => {
         const show = vis[key] !== false;
-        table.querySelectorAll(`tr > *:nth-child(${i + 1})`).forEach(el => {
+        table.querySelectorAll(`tr > *:nth-child(${i + 1}), colgroup > col:nth-child(${i + 1})`).forEach(el => {
           el.style.display = show ? '' : 'none';
         });
       });
@@ -12295,8 +12358,8 @@
     //  IMPORT — MODAL OPEN / CLOSE / NAVIGATION
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     function openImportModal(type) {
-      if (!GAS_USER || GAS_USER.role !== 'Admin') {
-        showToast('Import is restricted to Admin users only.', 'error'); return;
+      if (!GAS_USER || (GAS_USER.role !== 'Admin' && GAS_USER.role !== 'Manager')) {
+        showToast('Import is restricted to Admin and Manager users.', 'error'); return;
       }
       if (!GAS_ONLINE) {
         showToast('Import requires an active Google Sheets connection.', 'error'); return;
@@ -12839,16 +12902,16 @@
       const masterOfficer = officers.find(o =>
         String(o.name).trim().toLowerCase() === String(officerName).trim().toLowerCase());
       const propWithDesig = assigned.find(x => x.designation) || {};
-      const propWithDept  = assigned.find(x => x.dept) || {};
+      const propWithDept = assigned.find(x => x.dept) || {};
 
       const officer = {
-        name:        officerName,
+        name: officerName,
         designation: (masterOfficer && masterOfficer.designation)
-                       ? masterOfficer.designation
-                       : (propWithDesig.designation || ''),
-        dept:        (masterOfficer && masterOfficer.dept)
-                       ? masterOfficer.dept
-                       : (propWithDept.dept || ''),
+          ? masterOfficer.designation
+          : (propWithDesig.designation || ''),
+        dept: (masterOfficer && masterOfficer.dept)
+          ? masterOfficer.dept
+          : (propWithDept.dept || ''),
       };
       document.getElementById('consolidatedSub').textContent =
         `${officerName} · ${assigned.length} assigned propert${assigned.length === 1 ? 'y' : 'ies'}`;
@@ -12924,7 +12987,7 @@
       // ── Signatories ─────────────────────────────────────────────────
       const sigCell = (label, name, desig, dept) => {
         const desigDisplay = desig && desig.trim() ? esc(desig) : '<span style="display:inline-block;width:120px;border-bottom:1px solid #999;"></span>';
-        const deptDisplay  = dept  && dept.trim()  ? esc(dept)  : '<span style="display:inline-block;width:120px;border-bottom:1px solid #999;"></span>';
+        const deptDisplay = dept && dept.trim() ? esc(dept) : '<span style="display:inline-block;width:120px;border-bottom:1px solid #999;"></span>';
         return `
     <td style="width:50%;padding:10px 14px 14px;vertical-align:top;border-right:1px solid #ddd;border-top:1px solid #ddd;">
       <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:38px;">${label}</div>
@@ -13036,7 +13099,7 @@
 
     function doPrintConsolidated() {
       const officerName = _consolidatedOfficerName;
-      const assigned    = properties.filter(p => p.custodian === officerName);
+      const assigned = properties.filter(p => p.custodian === officerName);
       if (!assigned.length) return;
 
       // ── Exact same three-tier lookup used in the preview (printConsolidatedReport) ──
@@ -13045,18 +13108,18 @@
       const masterOfficer = officers.find(o =>
         String(o.name).trim().toLowerCase() === String(officerName).trim().toLowerCase());
       const propWithDesig = assigned.find(x => x.designation) || {};
-      const propWithDept  = assigned.find(x => x.dept)        || {};
+      const propWithDept = assigned.find(x => x.dept) || {};
       const officer = {
-        name:        officerName,
+        name: officerName,
         designation: (masterOfficer && masterOfficer.designation)
-                       ? masterOfficer.designation
-                       : (propWithDesig.designation || ''),
-        dept:        (masterOfficer && masterOfficer.dept)
-                       ? masterOfficer.dept
-                       : (propWithDept.dept || ''),
+          ? masterOfficer.designation
+          : (propWithDesig.designation || ''),
+        dept: (masterOfficer && masterOfficer.dept)
+          ? masterOfficer.dept
+          : (propWithDept.dept || ''),
       };
 
-      const win  = window.open('', '_blank', 'width=950,height=750');
+      const win = window.open('', '_blank', 'width=950,height=750');
       const html = buildConsolidatedDoc(officerName, assigned, officer);
       win.document.write(`<!DOCTYPE html><html><head>
     <meta charset="UTF-8">
@@ -13246,7 +13309,7 @@
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     // ── State ─────────────────────────────────────────────────────
-    let prsPage    = 1;
+    let prsPage = 1;
     let prsPerPage = 10;
     let prsSortCol = '';
     let prsSortDir = 1;
@@ -13254,14 +13317,14 @@
     // ── Purpose badge ──────────────────────────────────────────────
     function prsPurposeBadge(p) {
       const map = {
-        'Disposal':          ['red',    'delete_forever'],
-        'Repair':            ['amber',  'build'],
-        'Returned to Stock': ['green',  'inventory'],
-        'Unserviceable':     ['purple', 'report'],
+        'Disposal': ['red', 'delete_forever'],
+        'Repair': ['amber', 'build'],
+        'Returned to Stock': ['green', 'inventory'],
+        'Unserviceable': ['purple', 'report'],
       };
       const [cls, icon] = map[p] || ['gray', 'help_outline'];
       return `<span class="badge badge-${cls}" style="gap:3px;">
-        <span class="nav-icon" style="font-size:11px;width:auto;">${icon}</span>${esc(p||'—')}
+        <span class="nav-icon" style="font-size:11px;width:auto;">${icon}</span>${esc(p || '—')}
       </span>`;
     }
 
@@ -13284,19 +13347,19 @@
 
     // ── Filter helper ──────────────────────────────────────────────
     function _getPrsFiltered() {
-      const q   = ((document.getElementById('prsSearch')          || {}).value || '').toLowerCase();
-      const fd  = ((document.getElementById('prsFilterDept')      || {}).value || '');
-      const ft  = ((document.getElementById('prsFilterType')      || {}).value || '');
-      const fp  = ((document.getElementById('prsFilterPurpose')   || {}).value || '');
-      const fc  = ((document.getElementById('prsFilterCustodian') || {}).value || '');
+      const q = ((document.getElementById('prsSearch') || {}).value || '').toLowerCase();
+      const fd = ((document.getElementById('prsFilterDept') || {}).value || '');
+      const ft = ((document.getElementById('prsFilterType') || {}).value || '');
+      const fp = ((document.getElementById('prsFilterPurpose') || {}).value || '');
+      const fc = ((document.getElementById('prsFilterCustodian') || {}).value || '');
       let list = prsRecords;
-      if (q)  list = list.filter(r =>
-        (r.name||'').toLowerCase().includes(q)       ||
-        (r.propno||'').toLowerCase().includes(q)     ||
-        (r.prsNo||'').toLowerCase().includes(q)      ||
-        (r.custodian||'').toLowerCase().includes(q)  ||
-        (r.dept||'').toLowerCase().includes(q)       ||
-        (r.prsPurpose||'').toLowerCase().includes(q));
+      if (q) list = list.filter(r =>
+        (r.name || '').toLowerCase().includes(q) ||
+        (r.propno || '').toLowerCase().includes(q) ||
+        (r.prsNo || '').toLowerCase().includes(q) ||
+        (r.custodian || '').toLowerCase().includes(q) ||
+        (r.dept || '').toLowerCase().includes(q) ||
+        (r.prsPurpose || '').toLowerCase().includes(q));
       if (fd) list = list.filter(r => r.dept === fd);
       if (ft) list = list.filter(r => r.doctype === ft);
       if (fp) list = list.filter(r => r.prsPurpose === fp);
@@ -13307,20 +13370,20 @@
     // ── Pagination helpers ─────────────────────────────────────────
     function prsChangePage(d) {
       const max = Math.max(1, Math.ceil(_getPrsFiltered().length / prsPerPage));
-      prsPage   = Math.min(max, Math.max(1, prsPage + d));
+      prsPage = Math.min(max, Math.max(1, prsPage + d));
       renderPRS();
     }
-    function prsGoTo(n)    { prsPage = n; renderPRS(); }
+    function prsGoTo(n) { prsPage = n; renderPRS(); }
     function prsGoToLast() { prsPage = Math.max(1, Math.ceil(_getPrsFiltered().length / prsPerPage)); renderPRS(); }
     function prsChangeRows() {
       prsPerPage = parseInt(document.getElementById('prsRowsPerPage').value) || 10;
-      prsPage    = 1;
+      prsPage = 1;
       renderPRS();
     }
 
     // ── Render table ───────────────────────────────────────────────
     function renderPRS() {
-      const list  = _getPrsFiltered();
+      const list = _getPrsFiltered();
       const total = list.length;
       const maxPage = Math.max(1, Math.ceil(total / prsPerPage));
       if (prsPage > maxPage) prsPage = maxPage;
@@ -13329,7 +13392,7 @@
       // Populate custodian filter
       const custSel = document.getElementById('prsFilterCustodian');
       if (custSel) {
-        const prev  = custSel.value;
+        const prev = custSel.value;
         const custs = [...new Set(prsRecords.map(r => r.custodian).filter(Boolean))].sort();
         custSel.innerHTML = '<option value="">All Custodians</option>' +
           custs.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
@@ -13349,7 +13412,7 @@
 
       const infoEl = document.getElementById('prsPaginationInfo');
       if (infoEl) infoEl.textContent = total === 0 ? '0 results'
-        : `Showing ${(prsPage-1)*prsPerPage+1}–${Math.min(prsPage*prsPerPage, total)} of ${total}`;
+        : `Showing ${(prsPage - 1) * prsPerPage + 1}–${Math.min(prsPage * prsPerPage, total)} of ${total}`;
 
       _buildPageNums('prsPageNumbers', total, prsPerPage, prsPage, 'prsGoTo');
 
@@ -13364,17 +13427,17 @@
         return;
       }
       tbody.innerHTML = paged.map(r => `<tr>
-        <td><span class="cell-id" style="font-size:11px;">${esc(r.prsNo||'—')}</span></td>
+        <td><span class="cell-id" style="font-size:11px;">${esc(r.prsNo || '—')}</span></td>
         <td><span class="cell-id">${esc(r.propno)}</span></td>
         <td>
           <div class="cell-primary">${esc(r.name)}</div>
-          <div class="cell-secondary">${esc(r.category||'')}</div>
+          <div class="cell-secondary">${esc(r.category || '')}</div>
         </td>
         <td>
-          <div class="cell-primary">${esc(r.custodian||'—')}</div>
-          <div class="cell-secondary" style="font-size:11px;">${esc(r.designation||'')}</div>
+          <div class="cell-primary">${esc(r.custodian || '—')}</div>
+          <div class="cell-secondary" style="font-size:11px;">${esc(r.designation || '')}</div>
         </td>
-        <td><div class="cell-secondary" style="font-size:12px;">${esc(toTitleCase(r.dept||''))||'—'}</div></td>
+        <td><div class="cell-secondary" style="font-size:12px;">${esc(toTitleCase(r.dept || '')) || '—'}</div></td>
         <td>${typeBadge(r.doctype)}</td>
         <td>${prsPurposeBadge(r.prsPurpose)}</td>
         <td class="text-muted text-sm">${fmtDate(r.prsDate)}</td>
@@ -13383,24 +13446,24 @@
           <button class="action-icon-btn view"  title="Preview PRS" onclick="previewPRS('${r.id}')">
             <span class="nav-icon">print</span>
           </button>
-          <button class="action-icon-btn delete" title="Delete PRS Record"
-            onclick="showDeleteConfirm('${r.id}','prs')">
-            <span class="nav-icon">delete</span>
+          <button class="action-icon-btn delete" title="Transfer Property" style="color:var(--amber);"
+            onclick="openTransferModal('${r.id}', 'prs')">
+            <span class="nav-icon">swap_horiz</span>
           </button>
         </div></td>
       </tr>`).join('');
 
       document.querySelectorAll('#prsSortRow th').forEach(th => {
-        th.classList.remove('sort-asc','sort-desc');
-        if (th.dataset.col === prsSortCol) th.classList.add(prsSortDir===1?'sort-asc':'sort-desc');
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.col === prsSortCol) th.classList.add(prsSortDir === 1 ? 'sort-asc' : 'sort-desc');
       });
     }
 
     // ── Auto-generate PRS number ───────────────────────────────────
     function _genPrsNo() {
-      const yr  = String(new Date().getFullYear()).slice(-2);
+      const yr = String(new Date().getFullYear()).slice(-2);
       const seq = prsRecords.length + 1;
-      return `PRS-${String(seq).padStart(5,'0')}-${yr}`;
+      return `PRS-${String(seq).padStart(5, '0')}-${yr}`;
     }
 
     // ── Open PRS modal from Property Details ──────────────────────
@@ -13412,7 +13475,7 @@
         `[${p.doctype}] ${p.propno} — ${p.name}`;
       document.getElementById('prsModalSub').textContent =
         `${p.propno} · ${p.custodian || ''}`;
-      document.getElementById('prs-no').value  = _genPrsNo();
+      document.getElementById('prs-no').value = _genPrsNo();
       document.getElementById('prs-date').value = new Date().toISOString().split('T')[0];
       document.getElementById('prs-remarks').value = '';
       // Clear radio selection
@@ -13420,8 +13483,8 @@
       // Populate received-by dropdown from officers list
       const sel = document.getElementById('prs-receivedBy');
       sel.innerHTML = '<option value="">— Select GSO Officer —</option>' +
-        [...officers].sort((a,b) => a.name.localeCompare(b.name))
-          .map(o => `<option value="${esc(o.name)}" data-desig="${esc(o.designation||'')}">${esc(o.name)}</option>`)
+        [...officers].sort((a, b) => a.name.localeCompare(b.name))
+          .map(o => `<option value="${esc(o.name)}" data-desig="${esc(o.designation || '')}">${esc(o.name)}</option>`)
           .join('');
       document.getElementById('prs-receivedByPos').value = '';
       document.getElementById('prsModal').classList.add('open');
@@ -13435,18 +13498,18 @@
 
     // ── Submit PRS ─────────────────────────────────────────────────
     async function submitPRS() {
-      const propId  = document.getElementById('prs-propId').value;
-      const prsNo   = document.getElementById('prs-no').value.trim();
+      const propId = document.getElementById('prs-propId').value;
+      const prsNo = document.getElementById('prs-no').value.trim();
       const prsDate = document.getElementById('prs-date').value;
       const purpose = (document.querySelector('input[name="prsPurpose"]:checked') || {}).value || '';
-      const recBy   = document.getElementById('prs-receivedBy').value.trim();
-      const recPos  = document.getElementById('prs-receivedByPos').value.trim();
+      const recBy = document.getElementById('prs-receivedBy').value.trim();
+      const recPos = document.getElementById('prs-receivedByPos').value.trim();
       const remarks = document.getElementById('prs-remarks').value.trim();
 
-      if (!prsNo)   { showToast('PRS Number is required.', 'error'); return; }
+      if (!prsNo) { showToast('PRS Number is required.', 'error'); return; }
       if (!prsDate) { showToast('Date of Return is required.', 'error'); return; }
       if (!purpose) { showToast('Please select a Purpose.', 'error'); return; }
-      if (!recBy)   { showToast('Received By (GSO Officer) is required.', 'error'); return; }
+      if (!recBy) { showToast('Received By (GSO Officer) is required.', 'error'); return; }
 
       const p = properties.find(x => String(x.id) === String(propId));
       if (!p) { showToast('Property not found.', 'error'); return; }
@@ -13463,14 +13526,14 @@
 
       // Build PRS record
       const prsRec = Object.assign({}, p, {
-        prsPurpose:      purpose,
-        prsDate:         prsDate,
-        prsReceivedBy:   recBy,
-        prsReceivedByPos:recPos,
-        prsRemarks:      remarks,
-        prsNo:           prsNo,
-        prsProcessedBy:  getCurrentUser(),
-        prsProcessedAt:  new Date().toISOString(),
+        prsPurpose: purpose,
+        prsDate: prsDate,
+        prsReceivedBy: recBy,
+        prsReceivedByPos: recPos,
+        prsRemarks: remarks,
+        prsNo: prsNo,
+        prsProcessedBy: getCurrentUser(),
+        prsProcessedAt: new Date().toISOString(),
       });
 
       // If online: AWAIT the server BEFORE updating local state.
@@ -13548,7 +13611,7 @@
       win.document.write(`<!DOCTYPE html><html><head>
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <title>PRS — ${esc(r.prsNo||r.propno)}</title>
+  <title>PRS — ${esc(r.prsNo || r.propno)}</title>
   <style>
     @page { size: A4; margin: 0.75in 0.5in 0.5in 0.5in; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13564,23 +13627,23 @@
     // ── PRS document builder (matches sample image layout) ─────────
     function buildPRSDoc(r) {
       const lgu = (document.getElementById('settingCity') || { value: 'City of Ozamiz' }).value.toUpperCase().trim();
-      const prov= (document.getElementById('settingProvince') || { value: '' }).value.toUpperCase().trim() || 'MISAMIS OCCIDENTAL';
+      const prov = (document.getElementById('settingProvince') || { value: '' }).value.toUpperCase().trim() || 'MISAMIS OCCIDENTAL';
       const today = new Date(r.prsDate || Date.now()).toLocaleDateString('en-PH',
-        { year:'numeric', month:'long', day:'numeric' });
-      const purposes = ['Disposal','Repair','Returned to Stock','Unserviceable'];
+        { year: 'numeric', month: 'long', day: 'numeric' });
+      const purposes = ['Disposal', 'Repair', 'Returned to Stock', 'Unserviceable'];
       const purposeRow = purposes.map(pu =>
         `( ${r.prsPurpose === pu ? 'x' : '&nbsp;'} ) ${esc(pu)}`
       ).join('&emsp;');
-      const qty   = parseInt(r.qty) || 1;
-      const cost  = parseFloat(r.cost) || 0;
+      const qty = parseInt(r.qty) || 1;
+      const cost = parseFloat(r.cost) || 0;
       const total = qty * cost;
 
       // Description detail lines
       const details = [
-        r.brand       && `Brand: ${r.brand}`,
-        r.serial      && `Model: ${r.serial}`,
-        r.engineno    && `Engine No: ${r.engineno}`,
-        r.chassisno   && `Chassis No: ${r.chassisno}`,
+        r.brand && `Brand: ${r.brand}`,
+        r.serial && `Model: ${r.serial}`,
+        r.engineno && `Engine No: ${r.engineno}`,
+        r.chassisno && `Chassis No: ${r.chassisno}`,
         r.specification && `S/N: ${r.specification}`,
       ].filter(Boolean).join('<br>');
 
@@ -13604,7 +13667,7 @@
     <tr>
       <td style="width:35%;padding:3px 0;font-size:11px;vertical-align:top;">
         <span style="font-weight:700;">NAME OF OFFICE:</span>&nbsp;
-        ${esc(toTitleCase(r.dept||''))||'________________'}
+        ${esc(toTitleCase(r.dept || '')) || '________________'}
       </td>
       <td style="padding:3px 0;font-size:11px;">
         <span style="font-weight:700;">PURPOSE:</span>&nbsp;&nbsp;${purposeRow}
@@ -13629,7 +13692,7 @@
     <tbody>
       <tr>
         <td style="border:1px solid #000;padding:6px;text-align:center;vertical-align:top;">${qty}</td>
-        <td style="border:1px solid #000;padding:6px;text-align:center;vertical-align:top;">${esc(r.unit||'unit')}</td>
+        <td style="border:1px solid #000;padding:6px;text-align:center;vertical-align:top;">${esc(r.unit || 'unit')}</td>
         <td style="border:1px solid #000;padding:6px;vertical-align:top;min-height:80px;">
           <div style="font-weight:700;">${esc(r.name)}</div>
           ${details ? `<div style="font-size:10px;margin-top:3px;color:#333;">${details}</div>` : ''}
@@ -13643,7 +13706,7 @@
         <td style="border:1px solid #000;padding:6px;text-align:center;vertical-align:top;">${fmtDate(r.date)}</td>
         <td style="border:1px solid #000;padding:6px;text-align:center;vertical-align:top;font-size:10px;">
           ${esc(r.custodian)}<br>
-          <span style="font-size:9px;color:#555;">${esc(r.designation||'')}</span>
+          <span style="font-size:9px;color:#555;">${esc(r.designation || '')}</span>
         </td>
         <td style="border:1px solid #000;padding:6px;text-align:right;vertical-align:top;white-space:nowrap;">
           Php${fmtNum(cost)}
@@ -13669,24 +13732,24 @@
     <tr>
       <td style="width:50%;padding:10px 14px 24px;vertical-align:top;border-right:1px solid #000;font-size:10px;">
         I HEREBY CERTIFY that I have this ${esc(today)} returned to
-        <strong>${esc(r.prsReceivedBy||'GSO Officer')}</strong>
+        <strong>${esc(r.prsReceivedBy || 'GSO Officer')}</strong>
         the items / articles described above.
         <div style="margin-top:32px;text-align:center;">
           <div style="border-top:1.5px solid #000;display:inline-block;min-width:180px;padding-top:4px;">
-            <div style="font-weight:700;font-size:11px;">${esc(r.custodian||'').toUpperCase()}</div>
-            <div style="font-size:9px;color:#555;">${esc(r.designation||'')}</div>
-            <div style="font-size:9px;color:#555;">${esc(toTitleCase(r.dept||''))}</div>
+            <div style="font-weight:700;font-size:11px;">${esc(r.custodian || '').toUpperCase()}</div>
+            <div style="font-size:9px;color:#555;">${esc(r.designation || '')}</div>
+            <div style="font-size:9px;color:#555;">${esc(toTitleCase(r.dept || ''))}</div>
           </div>
         </div>
       </td>
       <td style="width:50%;padding:10px 14px 24px;vertical-align:top;font-size:10px;">
         I HEREBY CERTIFY that I have this ${esc(today)} RECEIVED from
-        <strong>${esc(r.custodian||'')}</strong>
+        <strong>${esc(r.custodian || '')}</strong>
         the items / articles described above.
         <div style="margin-top:32px;text-align:center;">
           <div style="border-top:1.5px solid #000;display:inline-block;min-width:180px;padding-top:4px;">
-            <div style="font-weight:700;font-size:11px;">${esc(r.prsReceivedBy||'').toUpperCase()}</div>
-            <div style="font-size:9px;color:#555;">${esc(r.prsReceivedByPos||'')}</div>
+            <div style="font-weight:700;font-size:11px;">${esc(r.prsReceivedBy || '').toUpperCase()}</div>
+            <div style="font-size:9px;color:#555;">${esc(r.prsReceivedByPos || '')}</div>
             <div style="font-size:9px;color:#555;">CGSO</div>
           </div>
         </div>
@@ -13695,8 +13758,8 @@
   </table>
 
   <div style="margin-top:8px;font-size:8px;color:#888;text-align:center;">
-    PRS No.: ${esc(r.prsNo||'—')} &nbsp;·&nbsp;
-    Processed by: ${esc(r.prsProcessedBy||'')} &nbsp;·&nbsp;
+    PRS No.: ${esc(r.prsNo || '—')} &nbsp;·&nbsp;
+    Processed by: ${esc(r.prsProcessedBy || '')} &nbsp;·&nbsp;
     ${r.prsProcessedAt ? new Date(r.prsProcessedAt).toLocaleString('en-PH') : ''}
   </div>
 
@@ -13706,18 +13769,18 @@
     // ── Export CSV ─────────────────────────────────────────────────
     function exportPRSCSV() {
       if (!prsRecords.length) { showToast('No PRS records to export.', 'error'); return; }
-      const cols = ['prsNo','propno','name','category','custodian','designation','dept',
-                    'doctype','prsPurpose','prsDate','cost','prsReceivedBy','prsRemarks'];
+      const cols = ['prsNo', 'propno', 'name', 'category', 'custodian', 'designation', 'dept',
+        'doctype', 'prsPurpose', 'prsDate', 'cost', 'prsReceivedBy', 'prsRemarks'];
       const header = cols.join(',');
       const rows = prsRecords.map(r =>
-        cols.map(c => `"${String(r[c]||'').replace(/"/g,'""')}"`).join(',')
+        cols.map(c => `"${String(r[c] || '').replace(/"/g, '""')}"`).join(',')
       );
-      const csv  = [header, ...rows].join('\n');
-      const blob = new Blob([csv], { type:'text/csv' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
-      a.download = `PRS_Records_${new Date().toISOString().slice(0,10)}.csv`;
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `PRS_Records_${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
       URL.revokeObjectURL(url);
       showToast(`Exported ${prsRecords.length} PRS records.`, 'success');

@@ -244,6 +244,7 @@ function doPost(e) {
       case 'deleteProperty':     return jsonOut(deleteProperty(payload.id,sess));
       case 'savePRS':            return jsonOut(savePRS(payload,sess));
       case 'deletePRS':          return jsonOut(deletePRS(payload.id,sess));
+      case 'transferPRS':        return jsonOut(transferPRS(payload,sess));
       case 'saveRealProperty':   return jsonOut(saveRealProperty(payload,sess));
       case 'deleteRealProperty': return jsonOut(deleteRecord(SH.REAL_PROP,payload.id,sess,'Real Property'));
       case 'saveHistory':        return jsonOut(saveHistory(payload,sess));
@@ -691,7 +692,7 @@ function readConfig() {
   catch(_) { return {}; }
 }
 function saveConfig(payload,sess) {
-  requirePerm(sess,['manage_config']);
+  if (sess.role !== 'Admin') return {ok:false,error:'Settings are restricted to Admin users only.'};
   Object.entries(payload).forEach(([key,value])=>{ upsertRow(SH.CONFIG,{key,value}); });
   return {ok:true};
 }
@@ -993,6 +994,52 @@ function deletePRS(id, sess) {
   audit('DELETE', 'PRS Record', 'Deleted PRS record id=' + id);
   return {ok:true};
 }
+
+function transferPRS(payload, sess) {
+  requirePerm(sess, ['manage_prs']);
+  if (!payload.propId || !payload.officer || !payload.dept) return {ok:false, error:'Missing transfer details.'};
+
+  const ss = getSpreadsheet();
+  const prsList = _readSheetFromSS(ss, SH.PRS_RECORDS);
+  const p = prsList.find(x => String(x.id) === String(payload.propId));
+  if (!p) return {ok:false, error:'PRS record not found.'};
+
+  const originSheet = String(p.doctype||'').toUpperCase() === 'ICS' ? SH.ICS_RECORDS : SH.PAR_RECORDS;
+
+  p.custodian = payload.officer;
+  p.designation = payload.designation || '';
+  p.dept = payload.dept;
+  if (payload.location) p.location = payload.location;
+  p.status = 'Serviceable'; // Re-issued as serviceable
+  p.updatedAt = new Date().toISOString();
+
+  // Strip PRS fields
+  delete p.prsPurpose; delete p.prsDate; delete p.prsReceivedBy;
+  delete p.prsReceivedByPos; delete p.prsRemarks; delete p.prsNo;
+  delete p.prsProcessedBy; delete p.prsProcessedAt;
+
+  upsertRow(originSheet, p);
+  try { deleteById(SH.PRS_RECORDS, p.id); } catch(e) {}
+
+  try {
+    upsertRow(SH.HISTORY, {
+      id: payload.entryId || Utilities.getUuid(),
+      propId: p.id,
+      type: 'transfer',
+      officer: payload.officer,
+      designation: payload.designation || '',
+      dept: payload.dept,
+      date: payload.date || new Date().toISOString().split('T')[0],
+      location: payload.location || '',
+      remarks: payload.remarks || 'Re-issued from PRS',
+      recordedBy: sess.username,
+      recordedAt: new Date().toISOString(),
+    });
+  } catch(e) {}
+
+  audit('TRANSFER', p.name, `Transferred from PRS: ${p.propno} → ${p.custodian}`);
+  return {ok:true, property: p};
+}
 function genPropNo(doctype) {
   return _genPropNoFromRows(doctype, readSheet(_propSheet(doctype)));
 }
@@ -1210,7 +1257,7 @@ function migrateHashedPasswords() {
 // ═══════════════════════════════════════════════════════════════════
 function bulkImport(payload,sess) {
   requirePerm(sess,['add_property']);
-  if(sess.role!=='Admin') return {ok:false,error:'Bulk import is restricted to Admin users only.'};
+  if(sess.role !== 'Admin' && sess.role !== 'Manager') return {ok:false,error:'Bulk import is restricted to Admin and Manager users.'};
   const {records,type}=payload;
   if(!Array.isArray(records)||!records.length) return {ok:false,error:'No records provided.'};
   let imported=0;
