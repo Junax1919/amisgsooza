@@ -41,7 +41,7 @@ const DRIVE_FOLDER_ID = (function(raw) {
   return s.split('/')[0].split('?')[0].split('#')[0];
 })(_RAW_DRIVE_FOLDER_ID);
 
-const APP_TITLE        = 'CGSO Property & Asset Management System';
+const APP_TITLE        = 'AMIS · Asset Management and Inventory System';
 const SESSION_TTL_MS   = 6 * 60 * 60 * 1000;
 const OTP_TTL_MS       = 10 * 60 * 1000;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
