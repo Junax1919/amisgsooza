@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -3015,7 +3015,7 @@
   <!-- ══════ CONNECTION STATUS BAR ══════ -->
   <div id="connBar">
     <span class="nav-icon" style="font-size:15px;width:auto;">sync</span>
-    <span id="connBarMsg">Connecting to Google Sheets…</span>
+    <span id="connBarMsg">Connecting to Database…</span>
   </div>
 
   <!-- ══════ GAS URL SETUP REMINDER ══════ -->
@@ -4552,9 +4552,9 @@
                   Export Data (JSON)
                 </button>
                 <button id="btnSyncToSheets" class="btn btn-ghost btn-sm" onclick="manualSyncToSheets()"
-                  style="margin-top:4px;display:none;" title="Push all local data to Google Sheets">
+                  style="margin-top:4px;display:none;" title="Push all local data to Database">
                   <span class="nav-icon" style="font-size:15px;">cloud_upload</span>
-                  Sync All Data → Google Sheets
+                  Sync All Data → Database
                 </button>
                 <button class="btn btn-ghost btn-sm" onclick="doLogout()" style="margin-top:4px;color:var(--red);">
                   <span class="nav-icon" style="font-size:15px;">logout</span>
@@ -5996,7 +5996,7 @@
             <div style="font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:6px;" id="delConfirmMsg">Are
               you sure you want to delete this record?</div>
             <div style="font-size:13px;color:var(--text-2);line-height:1.55;">This will permanently remove the record
-              from the system and Google Sheets. This action cannot be undone.</div>
+              from the system and database. This action cannot be undone.</div>
           </div>
         </div>
       </div>
@@ -6288,7 +6288,7 @@
           style="margin-top:14px;padding:12px 14px;background:var(--amber-bg);border:1px solid #fde68a;border-radius:8px;font-size:12px;color:#92400e;display:flex;gap:8px;align-items:flex-start;">
           <span class="nav-icon" style="font-size:16px;flex-shrink:0;color:#b45309;">warning</span>
           <div><strong>This action will move the record out of PAR/ICS.</strong> The property will be transferred to PRS
-            Records in Google Sheets. This cannot be undone from the UI.</div>
+            Records in the database. This cannot be undone from the UI.</div>
         </div>
       </div>
       <div class="modal-foot">
@@ -6336,6 +6336,63 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script>
+    /* ─────────────────────────────────────────
+       SOURCE CODE PROTECTION
+       Best-effort deterrence within browser/GAS constraints.
+       Full prevention is not possible in a web app, but these
+       measures significantly reduce casual exposure.
+    ───────────────────────────────────────────*/
+    (function _protectSource() {
+      // 1. Disable right-click context menu
+      document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        return false;
+      }, true);
+
+      // 2. Block common DevTools / view-source keyboard shortcuts
+      document.addEventListener('keydown', function (e) {
+        const k = e.key || '';
+        const ctrl = e.ctrlKey || e.metaKey;
+        // F12 — DevTools
+        if (k === 'F12') { e.preventDefault(); return false; }
+        // Ctrl+Shift+I / Ctrl+Shift+J — DevTools
+        if (ctrl && e.shiftKey && (k === 'I' || k === 'i' || k === 'J' || k === 'j')) {
+          e.preventDefault(); return false;
+        }
+        // Ctrl+U — View Source
+        if (ctrl && (k === 'U' || k === 'u')) { e.preventDefault(); return false; }
+        // Ctrl+S — Save page
+        if (ctrl && (k === 'S' || k === 's')) { e.preventDefault(); return false; }
+        // Ctrl+A — Select all (prevents bulk copy)
+        if (ctrl && (k === 'A' || k === 'a')) { e.preventDefault(); return false; }
+        // Ctrl+P — Print (which exposes source via print-preview in some browsers)
+        if (ctrl && (k === 'P' || k === 'p')) { e.preventDefault(); return false; }
+        // Ctrl+Shift+C — Inspector
+        if (ctrl && e.shiftKey && (k === 'C' || k === 'c')) { e.preventDefault(); return false; }
+      }, true);
+
+      // 3. Disable text selection globally (prevents copy via mouse drag)
+      document.addEventListener('selectstart', function (e) {
+        // Allow selection only inside input / textarea elements
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+        if (tag === 'input' || tag === 'textarea') return true;
+        e.preventDefault();
+        return false;
+      }, true);
+
+      // 4. Disable middle-click (opens link / source in new tab)
+      document.addEventListener('mousedown', function (e) {
+        if (e.button === 1) { e.preventDefault(); return false; }
+      }, true);
+
+      // 5. Clear console on devtools open (heuristic: window resize or focus cycle)
+      //    This clears any accidental console.log output visible to users.
+      const _clearConsole = function () {
+        try { console.clear(); } catch (_) { }
+      };
+      window.addEventListener('blur', _clearConsole);
+      window.addEventListener('focus', _clearConsole);
+    })();
     /* ─────────────────────────────────────
        DATA
     ───────────────────────────────────── */
@@ -6346,7 +6403,7 @@
       if (_debouncers[key]) clearTimeout(_debouncers[key]);
       _debouncers[key] = setTimeout(fn, ms);
     }
-    let departments = [];  // sourced from Google Sheet — populated via hydrateData()
+    let departments = [];  // sourced from Database — populated via hydrateData()
     let auditLog = [];
     let editingId = null;
     let currentPage = 1;
@@ -6871,11 +6928,11 @@
     /* ─────────────────────────────────────
        PPE CATEGORIES (editable, Sheet-backed)
        ─────────────────────────────────────
-       Both arrays are populated from Google Sheet via hydrateData() / hydrateRefData().
-       If the Sheet returns empty arrays (fresh deploy, missing seed, or schema mismatch),
+       Both arrays are populated from the Database via hydrateData() / hydrateRefData().
+       If the Database returns empty arrays (fresh deploy, missing seed, or schema mismatch),
        _bootstrapPPEFromCodes() derives them from the always-present PPE_CODES constant
-       and immediately pushes the derived data back to the Sheet so future loads come
-       from the Sheet like every other reference table.
+       and immediately pushes the derived data back to the Database so future loads come
+       from the Database like every other reference table.
     ───────────────────────────────────── */
     let ppeMainCategories = [];
     let ppeSubcategories = [];
@@ -6900,7 +6957,7 @@
 
     /**
      * If either PPE array is empty after hydration, bootstrap from PPE_CODES and
-     * schedule a one-time push to the Google Sheet so subsequent loads are Sheet-driven.
+     * schedule a one-time push to the Database so subsequent loads are Database-driven.
      */
     function _ensurePPEData() {
       if (ppeMainCategories.length && ppeSubcategories.length) return; // already have data
@@ -8367,7 +8424,7 @@
        ─────────────────────────────────────
        All IDs are normalised to strings via _ppeId() before any
        comparison, lookup, or storage. This prevents type-mismatch
-       failures caused by Google Sheets returning numeric-looking
+       failures caused by the Database returning numeric-looking
        values (e.g. 10101) instead of the string '10101'.
     ───────────────────────────────────── */
 
@@ -8495,9 +8552,9 @@
       if (GAS_ONLINE) {
         try {
           await gasCall('savePPEMain', record);
-          showToast(`"${name}" ${eid ? 'updated' : 'added'} and saved to Google Sheet.`, 'success');
+          showToast(`"${name}" ${eid ? 'updated' : 'added'} and saved to Database.`, 'success');
         } catch (e) {
-          showToast(`Saved locally. Sheet sync failed: ${e.message}`, 'warning');
+          showToast(`Saved locally. Database sync failed: ${e.message}`, 'warning');
         }
       } else {
         showToast(`"${name}" ${eid ? 'updated' : 'added'} (offline — will sync when reconnected).`, 'success');
@@ -8523,9 +8580,9 @@
       if (GAS_ONLINE) {
         try {
           await gasCall('deletePPEMain', { id: sid });
-          showToast(`"${label}" deleted from Google Sheet.`, 'success');
+          showToast(`"${label}" deleted from Database.`, 'success');
         } catch (e) {
-          showToast(`Deleted locally. Sheet sync failed: ${e.message}`, 'warning');
+          showToast(`Deleted locally. Database sync failed: ${e.message}`, 'warning');
         }
       } else {
         showToast(`"${label}" deleted (offline — will sync when reconnected).`, 'success');
@@ -8597,9 +8654,9 @@
       if (GAS_ONLINE) {
         try {
           await gasCall('savePPESub', record);
-          showToast(`"${name}" ${eid ? 'updated' : 'added'} and saved to Google Sheet.`, 'success');
+          showToast(`"${name}" ${eid ? 'updated' : 'added'} and saved to Database.`, 'success');
         } catch (e) {
-          showToast(`Saved locally. Sheet sync failed: ${e.message}`, 'warning');
+          showToast(`Saved locally. Database sync failed: ${e.message}`, 'warning');
         }
       } else {
         showToast(`"${name}" ${eid ? 'updated' : 'added'} (offline — will sync when reconnected).`, 'success');
@@ -8626,9 +8683,9 @@
       if (GAS_ONLINE) {
         try {
           await gasCall('deletePPESub', { id: sid });
-          showToast(`"${label}" deleted from Google Sheet.`, 'success');
+          showToast(`"${label}" deleted from Database.`, 'success');
         } catch (e) {
-          showToast(`Deleted locally. Sheet sync failed: ${e.message}`, 'warning');
+          showToast(`Deleted locally. Database sync failed: ${e.message}`, 'warning');
         }
       } else {
         showToast(`"${label}" deleted (offline — will sync when reconnected).`, 'success');
@@ -9619,7 +9676,7 @@
       gasCall('deleteAcctStatus', { id })
         .then(res => {
           if (res && res.ok) {
-            showToast(`"${deletedName}" deleted and removed from Google Sheets.`, 'success');
+            showToast(`"${deletedName}" deleted and removed from Database.`, 'success');
           } else {
             // Fallback: persist updated array to Config sheet
             _syncAcctStatusesToConfig()
@@ -10613,7 +10670,7 @@
       setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; t.style.transition = 'all .2s'; setTimeout(() => t.remove(), 250); }, 3000);
     }
 
-    // ── All property and real-property data is loaded dynamically from Google Sheets
+    // ── All property and real-property data is loaded dynamically from the Database
     //    via loadBackendData() → hydrateData() after a successful login.
     //    No static sample data is stored in this file.
 
@@ -10671,7 +10728,7 @@
     async function gasCall(action, payload = {}) {
       if (!GAS_URL) throw new Error('GAS_URL not configured.');
       const body = JSON.stringify({ action, payload, token: GAS_TOKEN });
-      setConnBar('conn-syncing', 'Syncing with Google Sheets…');
+      setConnBar('conn-syncing', 'Syncing with Database…');
       let retries = 2;
       while (retries >= 0) {
         try {
@@ -10684,7 +10741,7 @@
           if (!res.ok && res.status >= 500) throw new Error(`HTTP ${res.status}`);
           const json = await res.json();
           if (json.ok) {
-            setConnBar('ok', '✓ Saved to Google Sheets');
+            setConnBar('ok', '✓ Saved to Database');
           } else {
             const isSessionErr = json.error && json.error.toLowerCase().includes('session');
             const isPublic = _PUBLIC_ACTIONS.has(action);
@@ -11051,9 +11108,9 @@
       renderRealProperty(); renderAuditLog(); rebuildFilterDropdowns();
 
       if (isFirstRun) {
-        setConnBar('conn-syncing', 'First run — seeding Google Sheets…');
+        setConnBar('conn-syncing', 'First run — initializing Database…');
         await seedBackendFromLocal();
-        setConnBar('ok', '✓ Google Sheets seeded with default data');
+        setConnBar('ok', '✓ Database initialized with default data');
         startRefDataPolling();
         return;
       }
@@ -11102,8 +11159,8 @@
       updateStats(); filterTable(); renderPAR(); renderICS(); renderPRS();
       renderRealProperty(); renderAuditLog(); rebuildFilterDropdowns();
       if (isFirstRun) {
-        setConnBar('conn-syncing', 'First run — seeding Google Sheets…');
-        seedBackendFromLocal().then(() => setConnBar('ok', '✓ Google Sheets seeded with default data'));
+        setConnBar('conn-syncing', 'First run — initializing Database…');
+        seedBackendFromLocal().then(() => setConnBar('ok', '✓ Database initialized with default data'));
       } else {
         setConnBar('ok', '✓ All data loaded');
       }
@@ -11112,7 +11169,7 @@
 
     /** Full single-request load — used when getRefData fails or is unavailable. */
     async function _loadAllDataAtOnce() {
-      setConnBar('conn-syncing', 'Loading data from Google Sheets…');
+      setConnBar('conn-syncing', 'Loading data from Database…');
       const json = await _safeFetch(GAS_URL + '?action=getData');
       if (!json || !json.ok) {
         setConnBar('conn-error', '✗ Could not load data — please check connection and refresh');
@@ -11131,11 +11188,11 @@
         if (GAS_ONLINE) _syncAcctStatusesToConfig().catch(() => { });
       }
       if (isFirstRun) {
-        setConnBar('conn-syncing', 'First run — seeding Google Sheets…');
+        setConnBar('conn-syncing', 'First run — initializing Database…');
         await seedBackendFromLocal();
-        setConnBar('ok', '✓ Google Sheets seeded with default data');
+        setConnBar('ok', '✓ Database initialized with default data');
       } else {
-        setConnBar('ok', '✓ Data loaded from Google Sheets');
+        setConnBar('ok', '✓ Data loaded from Database');
       }
       startRefDataPolling();
     }
@@ -11387,17 +11444,17 @@
     }
 
     async function manualSyncToSheets() {
-      if (!GAS_ONLINE) { showToast('Not connected to Google Sheets.', 'error'); return; }
-      if (!confirm('This will push ALL local data (officers, departments, properties, PPE categories, etc.) to Google Sheets. Existing records will be updated. Continue?')) return;
+      if (!GAS_ONLINE) { showToast('Not connected to Database.', 'error'); return; }
+      if (!confirm('This will push ALL local data (officers, departments, properties, PPE categories, etc.) to the Database. Existing records will be updated. Continue?')) return;
       const btn = document.getElementById('btnSyncToSheets');
       if (btn) { btn.disabled = true; btn.innerHTML = '<span class="nav-icon" style="font-size:15px;">sync</span> Syncing…'; }
       try {
         await seedBackendFromLocal();
-        showToast('All data synced to Google Sheets successfully!', 'success');
+        showToast('All data synced to Database successfully!', 'success');
       } catch (e) {
         showToast('Sync failed: ' + e.message, 'error');
       } finally {
-        if (btn) { btn.disabled = false; btn.innerHTML = '<span class="nav-icon" style="font-size:15px;">cloud_upload</span> Sync All Data → Google Sheets'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<span class="nav-icon" style="font-size:15px;">cloud_upload</span> Sync All Data → Database'; }
       }
     }
 
@@ -12411,7 +12468,7 @@
         showToast('Import is restricted to Admin and Manager users.', 'error'); return;
       }
       if (!GAS_ONLINE) {
-        showToast('Import requires an active Google Sheets connection.', 'error'); return;
+        showToast('Import requires an active Database connection.', 'error'); return;
       }
       _importType = type || 'par';
       _importStep = 1;
@@ -12923,7 +12980,7 @@
         document.getElementById('importResultMsg').textContent = `Successfully imported ${totalImported} record(s)`;
         document.getElementById('importResultSub').innerHTML =
           (skipped > 0 ? `<span style="color:var(--amber);">${skipped} row(s) skipped</span> (missing required fields)<br>` : '') +
-          `Records have been saved to Google Sheets.`;
+          `Records have been saved to Database.`;
         showToast(`Import complete: ${totalImported} record(s) added.`, 'success');
         addLog('IMPORT', 'Bulk Import', `${totalImported} ${_importType.toUpperCase()} records imported by ${getCurrentUser()}`);
       } else {
@@ -13613,7 +13670,7 @@
       closeModal('prsModal');
       restoreBtn();
       filterTable(); renderPAR(); renderICS(); renderPRS(); updateStats();
-      showToast(`PRS "${prsRec.prsNo}" saved to Google Sheets.`, 'success');
+      showToast(`PRS "${prsRec.prsNo}" saved to Database.`, 'success');
     }
 
     // ── Delete PRS record ──────────────────────────────────────────
