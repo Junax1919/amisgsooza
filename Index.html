@@ -13039,142 +13039,138 @@
 
       // ── Shared helpers ─────────────────────────────────────────────
       const R = (label, val) => val
-        ? `<tr><td style="padding:1px 0;font-size:9.5px;white-space:nowrap;padding-right:6px;color:#555;">${label}:</td>
-           <td style="padding:1px 0;font-size:9.5px;font-weight:600;">${esc(val)}</td></tr>`
+        ? `<div><span style="color:#444;">${label}:</span> <strong style="color:#000;">${esc(val)}</strong></div>`
         : '';
 
       const propRow = (p, idx) => {
         const qty = parseInt(p.qty) || 1;
         const total = qty * (parseFloat(p.cost) || 0);
-        const descLines = R('Brand', p.brand) + R('Model/Serial', p.serial)
+        const descLines = R('Brand', p.brand) + R('Model/SN', p.serial)
           + R('Plate No', p.plateno) + R('Engine No', p.engineno)
           + R('Chassis No', p.chassisno) + R('Color', p.color)
           + R('Spec', p.specification);
         const _fc = p.fundcluster ? fundClusters.find(fc => fc.code === p.fundcluster) : null;
-        const fc = _fc ? `${_fc.code} — ${_fc.name}` : (p.fundcluster || '');
-        return `<tr style="border-bottom:1px solid #e0e0e0;">
-      <td style="padding:7px 4px;text-align:center;font-size:11px;font-weight:600;vertical-align:top;border-right:1px solid #ddd;white-space:nowrap;color:#555;">${idx}</td>
-      <td style="padding:7px 6px;vertical-align:top;border-right:1px solid #ddd;white-space:nowrap;font-size:9.5px;">${esc(p.propno)}</td>
-      <td style="padding:7px 6px;vertical-align:top;border-right:1px solid #ddd;">
-        <div style="font-weight:700;font-size:10.5px;text-transform:uppercase;margin-bottom:3px;">${esc(p.name)}</div>
-        ${descLines ? `<table style="border-collapse:collapse;margin-top:2px;">${descLines}</table>` : ''}
-      </td>
-      <td style="padding:7px 4px;text-align:center;font-size:9.5px;vertical-align:top;border-right:1px solid #ddd;">${qty}</td>
-      <td style="padding:7px 4px;text-align:center;font-size:9.5px;vertical-align:top;border-right:1px solid #ddd;text-transform:uppercase;">${esc(p.unit || 'unit')}</td>
-      <td style="padding:7px 6px;text-align:right;font-size:9.5px;vertical-align:top;border-right:1px solid #ddd;white-space:nowrap;font-variant-numeric:tabular-nums;">&#8369;&nbsp;${fmtNum(p.cost)}</td>
-      <td style="padding:7px 6px;text-align:right;font-size:9.5px;vertical-align:top;white-space:nowrap;font-variant-numeric:tabular-nums;">&#8369;&nbsp;${fmtNum(total)}</td>
-    </tr>`;
+
+        return `<tr>
+          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${idx}</td>
+          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${esc(p.propno)}</td>
+          <td style="padding:6px; border:1px solid #000; vertical-align:top;">
+            <div style="font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:2px;">${esc(p.name)}</div>
+            <div style="font-size:9.5px; line-height:1.3;">${descLines}</div>
+          </td>
+          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${qty}</td>
+          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top; text-transform:uppercase;">${esc(p.unit || 'unit')}</td>
+          <td style="padding:6px; text-align:right; border:1px solid #000; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(p.cost)}</td>
+          <td style="padding:6px; text-align:right; border:1px solid #000; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(total)}</td>
+        </tr>`;
       };
 
-      const groupTable = (items, label, color) => {
+      const groupTable = (items, label) => {
         if (!items.length) return '';
-        const grandTotal = items.reduce((s, p) => { const q = parseInt(p.qty) || 1; return s + q * (parseFloat(p.cost) || 0); }, 0);
+        const groupTotal = items.reduce((s, p) => { const q = parseInt(p.qty) || 1; return s + q * (parseFloat(p.cost) || 0); }, 0);
         return `
-      <!-- Section header -->
-      <tr>
-        <td colspan="7" style="padding:8px 8px 5px;font-size:10px;font-weight:700;letter-spacing:.06em;
-            text-transform:uppercase;color:${color};background:#fafafa;border-top:2px solid ${color};
-            border-bottom:1px solid #ddd;">
-          ${label} &nbsp;<span style="font-weight:400;font-size:9px;color:#888;">${items.length} record${items.length !== 1 ? 's' : ''}</span>
-        </td>
-      </tr>
-      ${items.map((p, i) => propRow(p, i + 1)).join('')}
-      <!-- Subtotal -->
-      <tr style="background:#f9f9f9;">
-        <td colspan="6" style="padding:6px 8px;text-align:right;font-size:10px;font-weight:700;border-top:1.5px solid #aaa;">
-          ${label} SUBTOTAL
-        </td>
-        <td style="padding:6px 8px;text-align:right;font-size:10px;font-weight:700;border-top:1.5px solid #aaa;
-            white-space:nowrap;font-variant-numeric:tabular-nums;">
-          &#8369;&nbsp;${fmtNum(grandTotal)}
-        </td>
-      </tr>`;
+        <tr>
+          <td colspan="7" style="padding:6px 8px; font-size:11px; font-weight:700; text-transform:uppercase; background:#f0f0f0; border:1px solid #000; text-align:left;">
+            ${label} <span style="font-weight:400; font-size:10px; float:right;">${items.length} item${items.length !== 1 ? 's' : ''}</span>
+          </td>
+        </tr>
+        ${items.map((p, i) => propRow(p, i + 1)).join('')}
+        <tr>
+          <td colspan="6" style="padding:6px 8px; text-align:right; font-size:10px; font-weight:700; border:1px solid #000;">
+            SUBTOTAL
+          </td>
+          <td style="padding:6px 8px; text-align:right; font-size:10px; font-weight:700; border:1px solid #000; white-space:nowrap;">
+            &#8369;&nbsp;${fmtNum(groupTotal)}
+          </td>
+        </tr>`;
       };
 
       const grandTotal = assigned.reduce((s, p) => { const q = parseInt(p.qty) || 1; return s + q * (parseFloat(p.cost) || 0); }, 0);
 
-      // ── Signatories ─────────────────────────────────────────────────
       const sigCell = (label, name, desig, dept) => {
-        const desigDisplay = desig && desig.trim() ? esc(desig) : '<span style="display:inline-block;width:120px;border-bottom:1px solid #999;"></span>';
-        const deptDisplay = dept && dept.trim() ? esc(dept) : '<span style="display:inline-block;width:120px;border-bottom:1px solid #999;"></span>';
+        const _name = name && name.trim() ? esc(formatSignatoryName(name)) : '&nbsp;';
+        const _desig = desig && desig.trim() ? esc(desig) : '&nbsp;';
+        const _dept = dept && dept.trim() ? esc(dept) : '&nbsp;';
         return `
-    <td style="width:50%;padding:10px 14px 14px;vertical-align:top;border-right:1px solid #ddd;border-top:1px solid #ddd;">
-      <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:38px;">${label}</div>
-      <div style="border-top:1.5px solid #000;padding-top:4px;text-align:center;">
-        <div style="font-weight:700;font-size:10.5px;min-height:15px;">${esc(name) || '&nbsp;'}</div>
-        <div style="font-size:8.5px;color:#555;margin-top:2px;">Signature Over Printed Name</div>
-        <div style="font-size:9.5px;font-weight:600;margin-top:6px;min-height:14px;">${desigDisplay}</div>
-        <div style="font-size:8.5px;color:#555;">Designation</div>
-        <div style="font-size:9.5px;margin-top:4px;min-height:14px;">${deptDisplay}</div>
-        <div style="font-size:8.5px;color:#555;">Department</div>
+    <td style="width:33.33%; padding:15px 10px 10px; vertical-align:top; border:1px solid #000; border-top:none; text-align:center;">
+      <div style="font-size:10px; font-weight:700; text-transform:uppercase; text-align:left; margin-bottom:45px;">${label}</div>
+      <div style="display:inline-block; width:90%;">
+        <div style="font-weight:700; font-size:12px; text-transform:uppercase; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:2px;">${_name}</div>
+        <div style="font-size:9px; color:#444;">Signature Over Printed Name</div>
+        <div style="font-size:10px; font-weight:600; margin-top:10px;">${_desig}</div>
+        <div style="font-size:9px; color:#444;">Position/Designation</div>
+        <div style="font-size:10px; margin-top:10px;">${_dept}</div>
+        <div style="font-size:9px; color:#444;">Department/Office</div>
       </div>
     </td>`;
       };
 
-      // Use issuedby/notedby from the first property that has them
-      const refProp = assigned.find(p => p.issuedby) || assigned[0];
-      const issuedOfficer = (refProp && refProp.issuedby) ? officers.find(o => String(o.name).trim().toLowerCase() === String(refProp.issuedby || '').trim().toLowerCase()) : null;
-      const notedOfficer = (refProp && refProp.notedby) ? officers.find(o => String(o.name).trim().toLowerCase() === String(refProp.notedby || '').trim().toLowerCase()) : null;
+      const refProp = assigned.find(p => p.issuedby) || assigned[0] || {};
+      const issuedOfficer = (refProp.issuedby) ? officers.find(o => String(o.name).trim().toLowerCase() === String(refProp.issuedby || '').trim().toLowerCase()) : null;
+      const notedOfficer = (refProp.notedby) ? officers.find(o => String(o.name).trim().toLowerCase() === String(refProp.notedby || '').trim().toLowerCase()) : null;
 
       return `
-  <div id="consolidated-doc" style="font-family:'Roboto',Arial,sans-serif;width:100%;color:#000;font-size:11px;line-height:1.4;">
+  <div id="consolidated-doc" style="font-family:'Inter', 'Roboto', Arial, sans-serif; width:100%; color:#000; font-size:11px; line-height:1.4;">
 
     <!-- ══ HEADER ══ -->
-    <div style="text-align:center;padding-bottom:10px;border-bottom:2.5px solid #000;margin-bottom:10px;">
-      <div style="font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">
-        Custodian Accountability Receipt
-      </div>
-      <div style="font-size:11px;font-weight:700;margin-top:3px;letter-spacing:.04em;">LGU — ${esc(lgu)}</div>
-      <div style="font-size:9px;margin-top:1px;text-transform:uppercase;letter-spacing:.05em;color:#555;">Agency</div>
-    </div>
-
-    <!-- ══ OFFICER INFO ══ -->
-    <div style="display:flex;gap:0;border:1.5px solid #000;margin-bottom:10px;">
-      <div style="flex:2;padding:7px 10px;border-right:1px solid #000;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:2px;">Accountable Officer</div>
-        <div style="font-size:13px;font-weight:700;letter-spacing:.01em;">${esc(officerName)}</div>
-        <div style="font-size:10px;color:#444;margin-top:1px;">${esc(officer.designation || '')} &nbsp;·&nbsp; ${esc(toTitleCase(officer.dept || ''))}</div>
-      </div>
-      <div style="flex:1;padding:7px 10px;border-right:1px solid #000;text-align:center;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:2px;">Total Properties</div>
-        <div style="font-size:20px;font-weight:700;">${assigned.length}</div>
-        <div style="font-size:9px;color:#666;">PAR: ${parItems.length} &nbsp;·&nbsp; ICS: ${icsItems.length}</div>
-      </div>
-      <div style="flex:1;padding:7px 10px;text-align:center;">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#555;margin-bottom:2px;">Report Date</div>
-        <div style="font-size:11px;font-weight:600;">${today}</div>
-        <div style="font-size:9px;color:#666;">As of this date</div>
+    <div style="text-align:center; padding-bottom:15px; margin-bottom:15px;">
+      <div style="font-size:13px; font-weight:600; text-transform:uppercase;">Republic of the Philippines</div>
+      <div style="font-size:13px; font-weight:600; text-transform:uppercase;">LGU — ${esc(lgu)}</div>
+      <div style="font-size:18px; font-weight:700; text-transform:uppercase; margin-top:10px; text-decoration:underline;">
+        CUSTODIAN ACCOUNTABILITY RECEIPT
       </div>
     </div>
 
-    <!-- ══ PROPERTIES TABLE + SIGNATURES (single continuous border) ══ -->
-    <div style="border:1.5px solid #000;border-radius:0;">
-
-    <table style="width:100%;border-collapse:collapse;border:none;margin-bottom:0;">
+    <!-- ══ PROPERTIES TABLE ══ -->
+    <table style="width:100%; border-collapse:collapse; border:2px solid #000; margin-bottom:0;">
       <colgroup>
-        <col style="width:4%"><col style="width:13%"><col style="width:38%">
-        <col style="width:5%"><col style="width:6%"><col style="width:14%"><col style="width:14%">
+        <col style="width:5%"><col style="width:14%"><col style="width:37%">
+        <col style="width:6%"><col style="width:6%"><col style="width:16%"><col style="width:16%">
       </colgroup>
       <thead>
-        <tr style="background:#1a1a18;color:#fff;">
-          <th style="padding:7px 4px;text-align:center;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">#</th>
-          <th style="padding:7px 6px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">PROPERTY NO.</th>
-          <th style="padding:7px 6px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">DESCRIPTION</th>
-          <th style="padding:7px 4px;text-align:center;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">QTY</th>
-          <th style="padding:7px 4px;text-align:center;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">UNIT</th>
-          <th style="padding:7px 6px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">UNIT COST</th>
-          <th style="padding:7px 6px;text-align:right;font-size:9px;font-weight:700;letter-spacing:.05em;border:none;">TOTAL AMOUNT</th>
+        <tr>
+          <!-- ══ OFFICER INFO INSIDE THEAD ══ -->
+          <td colspan="7" style="border:1px solid #000; padding:10px; background:#fff;">
+            <table style="width:100%; border-collapse:collapse; border:none; margin:0;">
+              <tr>
+                <td style="width:18%; font-weight:600; font-size:11px; padding:3px 0; border:none;">Accountable Officer:</td>
+                <td style="width:47%; font-weight:700; font-size:12px; padding:3px 0; border-bottom:1px solid #000; text-transform:uppercase;">${esc(formatSignatoryName(officerName))}</td>
+                <td style="width:15%; font-weight:600; font-size:11px; padding:3px 0; text-align:right; padding-right:10px; border:none;">Report Date:</td>
+                <td style="width:20%; font-weight:700; font-size:11px; padding:3px 0; border-bottom:1px solid #000;">${today}</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; border:none;">Designation:</td>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; border-bottom:1px solid #000;">${esc(officer.designation || '')}</td>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; text-align:right; padding-right:10px; border:none;">Total Items:</td>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; border-bottom:1px solid #000;">${assigned.length}</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; border:none;">Department/Office:</td>
+                <td style="font-weight:600; font-size:11px; padding:3px 0; border-bottom:1px solid #000;">${esc(toTitleCase(officer.dept || ''))}</td>
+                <td colspan="2" style="border:none;"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">NO.</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">PROPERTY NO.</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">DESCRIPTION</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">QTY</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">UNIT</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">UNIT COST</th>
+          <th style="padding:8px 4px; text-align:center; font-size:10px; font-weight:700; border:1px solid #000; background:#e0e0e0; border-bottom:2px solid #000;">TOTAL AMOUNT</th>
         </tr>
       </thead>
       <tbody>
-        ${groupTable(parItems, 'Property Acknowledgment Receipt (PAR)', '#1e40af')}
-        ${groupTable(icsItems, 'Inventory Custodian Slip (ICS)', '#065f46')}
+        ${groupTable(parItems, 'Property Acknowledgment Receipt (PAR)')}
+        ${groupTable(icsItems, 'Inventory Custodian Slip (ICS)')}
         <!-- GRAND TOTAL -->
-        <tr style="background:#1a1a18;color:#fff;">
-          <td colspan="6" style="padding:8px 10px;text-align:right;font-size:10.5px;font-weight:700;letter-spacing:.04em;border:none;">
-            GRAND TOTAL
+        <tr>
+          <td colspan="6" style="padding:8px 10px; text-align:right; font-size:11px; font-weight:700; border:1px solid #000; background:#f0f0f0;">
+            GRAND TOTAL AMOUNT
           </td>
-          <td style="padding:8px 10px;text-align:right;font-size:11px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;border:none;">
+          <td style="padding:8px 10px; text-align:right; font-size:11px; font-weight:700; white-space:nowrap; border:1px solid #000; background:#f0f0f0;">
             &#8369;&nbsp;${fmtNum(grandTotal)}
           </td>
         </tr>
@@ -13182,24 +13178,16 @@
     </table>
 
     <!-- ══ SIGNATURES ══ -->
-    <table style="width:100%;border-collapse:collapse;border:none;border-top:1.5px solid #000;">
+    <table style="width:100%; border-collapse:collapse; border:2px solid #000; border-top:none; table-layout:fixed; page-break-inside:avoid;">
       <tr>
-        ${sigCell('Received by (Accountable Officer):', officerName, officer.designation || '&nbsp;', toTitleCase(officer.dept || ''))}
-        ${sigCell('Issued by:', refProp && refProp.issuedby || '', refProp && refProp.issuedpos || '', toTitleCase((issuedOfficer && issuedOfficer.dept) || ''))}
-      </tr>
-      <tr>
-        ${sigCell('Noted by:', refProp && refProp.notedby || '', refProp && refProp.notedpos || '', toTitleCase((notedOfficer && notedOfficer.dept) || ''))}
-        <td style="padding:10px 14px;vertical-align:top;font-size:9px;color:#555;line-height:1.8;border-left:1px solid #ddd;border-top:1px solid #ddd;">
-          <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Remarks</div>
-          <div style="border:1px solid #ddd;border-radius:4px;min-height:60px;padding:6px;"></div>
-        </td>
+        ${sigCell('Received by:', officerName, officer.designation, toTitleCase(officer.dept || ''))}
+        ${sigCell('Issued by:', refProp.issuedby, refProp.issuedpos, toTitleCase((issuedOfficer && issuedOfficer.dept) || ''))}
+        ${sigCell('Noted by:', refProp.notedby, refProp.notedpos, toTitleCase((notedOfficer && notedOfficer.dept) || ''))}
       </tr>
     </table>
 
-    </div><!-- end continuous-border wrapper -->
-
     <!-- ══ FOOTER ══ -->
-    <div style="margin-top:10px;font-size:8.5px;color:#888;text-align:center;">
+    <div style="margin-top:10px; font-size:8.5px; color:#888; text-align:center;">
       This report is system-generated. · CGSO Property &amp; Asset Management System · ${today}
     </div>
 
@@ -13211,9 +13199,6 @@
       const assigned = properties.filter(p => p.custodian === officerName);
       if (!assigned.length) return;
 
-      // ── Exact same three-tier lookup used in the preview (printConsolidatedReport) ──
-      // Without this, doPrintConsolidated used `|| {}` which gave undefined
-      // designation/dept, producing blank fields in the printed output.
       const masterOfficer = officers.find(o =>
         String(o.name).trim().toLowerCase() === String(officerName).trim().toLowerCase());
       const propWithDesig = assigned.find(x => x.designation) || {};
@@ -13232,15 +13217,16 @@
       const html = buildConsolidatedDoc(officerName, assigned, officer);
       win.document.write(`<!DOCTYPE html><html><head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>Consolidated Report — ${esc(officerName)}</title>
     <style>
-      @page { size: A4; margin: 0.6in 0.5in 0.5in 0.5in; }
+      @page { size: A4; margin: 1in 0.5in 0.5in 0.5in; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { width: 100%; }
-      body { font-family: 'Roboto', Arial, sans-serif; font-size: 11px; color: #000; background: #fff; }
-      table { page-break-inside: auto; }
+      body { font-family: 'Inter', 'Roboto', Arial, sans-serif; font-size: 11px; color: #000; background: #fff; line-height: 1.4; }
+      table { page-break-inside: auto; border-collapse: collapse; }
       tr { page-break-inside: avoid; page-break-after: auto; }
+      thead { display: table-header-group; }
       @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
     </style>
   </head><body style="padding:0;">${html}</body></html>`);
