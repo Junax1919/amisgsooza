@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -3159,16 +3159,17 @@
             <div class="brand-sub">City of Ozamiz</div>
           </div>
         </div>
-<!--        
+        <!--
         <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" title="Toggle sidebar"
           aria-label="Toggle sidebar">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
--->
-      </div>
+      -->
 
+
+      </div>
       <div class="sidebar-nav">
         <div class="nav-section-label">Property</div>
         <button class="nav-item active" data-panel="registry" onclick="switchPanel(this,'registry')"
@@ -3912,10 +3913,10 @@
                   <th class="sortable" data-col="name" onclick="sortRP('name')">Description / Name</th>
                   <th class="sortable" data-col="location" onclick="sortRP('location')">Location</th>
                   <th class="sortable" data-col="area" onclick="sortRP('area')">Area (sqm)</th>
-                  <th class="sortable" data-col="dept" onclick="sortRP('dept')">Department</th>
+                  <th class="sortable" data-col="cost" onclick="sortRP('cost')">Acquisition Cost</th>
                   <th class="sortable" data-col="appraisedval" onclick="sortRP('appraisedval')">Appraised Value</th>
                   <th class="sortable" data-col="date" onclick="sortRP('date')">Acq. Date</th>
-                  <th class="sortable" data-col="status" onclick="sortRP('status')">Status</th>
+                  <th class="sortable" data-col="acquisition" onclick="sortRP('acquisition')">Mode of Acquisition</th>
                   <th>Document</th>
                   <th>Action</th>
                 </tr>
@@ -9155,10 +9156,10 @@
       </td>
       <td><div class="cell-secondary" style="font-size:12px;">${esc(r.location) || '—'}</div></td>
       <td class="text-muted text-sm">${r.area ? fmtNum(r.area) + ' sqm' : '—'}</td>
-      <td><div class="cell-secondary" style="font-size:12px;">${esc(toTitleCase(r.dept || '')) || '—'}</div></td>
+      <td><div class="cell-secondary" style="font-size:12px;">${fmtNum(r.cost || 0) !== '0' ? '₱' + fmtNum(r.cost || 0) : '—'}</div></td>
       <td class="cell-amount">₱${fmtNum(r.appraisedval || 0)}</td>
       <td class="text-muted text-sm">${fmtDate(r.date)}</td>
-      <td>${rpStatusBadge(r.status)}</td>
+      <td>${esc(toTitleCase(r.acquisition || '')) || '—'}</td>
       <td>${rpDocBadge(r)}</td>
       <td>
         <div class="action-icons">
@@ -13545,7 +13546,7 @@
           <div class="cell-primary">${esc(r.custodian || '—')}</div>
           <div class="cell-secondary" style="font-size:11px;">${esc(r.designation || '')}</div>
         </td>
-        <td><div class="cell-secondary" style="font-size:12px;">${esc(toTitleCase(r.dept || '')) || '—'}</div></td>
+        <td><div class="cell-secondary" style="font-size:12px;">${fmtNum(r.cost || 0) !== '0' ? '₱' + fmtNum(r.cost || 0) : '—'}</div></td>
         <td>${typeBadge(r.doctype)}</td>
         <td>${prsPurposeBadge(r.prsPurpose)}</td>
         <td class="text-muted text-sm">${fmtDate(r.prsDate)}</td>
