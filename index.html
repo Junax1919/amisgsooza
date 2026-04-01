@@ -3379,7 +3379,7 @@
               <div class="search-wrap">
                 <span class="search-icon">⌕</span>
                 <input type="text" id="searchInput" placeholder="Search property, officer, department."
-                  autocomplete="off">
+                  autocomplete="off" oninput="filterTable()">
               </div>
               <select class="filter-select" id="filterDept" onchange="filterTable()" style="max-width:180px;">
                 <option value="">All Departments</option>
@@ -4084,7 +4084,7 @@
           <div class="page-head">
             <div class="page-head-left">
               <h1>Reports</h1>
-              <p>Generate official CGSO property reports for submission</p>
+              <p>Export and Generate Reports for Submission</p>
             </div>
           </div>
 
@@ -4094,25 +4094,7 @@
             Export Reports
           </div>
           <div class="report-grid" style="margin-bottom:28px;">
-            <div class="report-card" onclick="exportCSV()">
-              <div class="report-card-icon">▤</div>
-              <div class="report-card-title">Full Property Inventory (CSV)</div>
-              <div class="report-card-desc">All PAR &amp; ICS records — 33 fields including custodians, descriptions,
-                and procurement details</div>
-              <div class="report-card-action"><button class="btn btn-ghost btn-sm">Export CSV →</button></div>
-            </div>
-            <div class="report-card" onclick="exportCSV('PAR')">
-              <div class="report-card-icon">◱</div>
-              <div class="report-card-title">PAR Records Only (CSV)</div>
-              <div class="report-card-desc">Properties ₱50,000 and above — all accountable officers per department</div>
-              <div class="report-card-action"><button class="btn btn-ghost btn-sm">Export CSV →</button></div>
-            </div>
-            <div class="report-card" onclick="exportCSV('ICS')">
-              <div class="report-card-icon">◈</div>
-              <div class="report-card-title">ICS Records Only (CSV)</div>
-              <div class="report-card-desc">Semi-expendable items below the PAR threshold — all custodians</div>
-              <div class="report-card-action"><button class="btn btn-ghost btn-sm">Export CSV →</button></div>
-            </div>
+
             <div class="report-card"
               onclick="runInventory(); switchPanel(document.querySelector('[data-panel=inventory]'),'inventory')">
               <div class="report-card-icon">◼</div>
@@ -6493,10 +6475,10 @@
       const fc = ((document.getElementById('filterCustodian') || {}).value || '');
       const fca = ((document.getElementById('filterCategory') || {}).value || '');
       let result = properties.filter(p =>
-        (!q || (p.name || '').toLowerCase().includes(q) || (p.propno || '').toLowerCase().includes(q) ||
-          (p.dept || '').toLowerCase().includes(q) || (p.custodian || '').toLowerCase().includes(q) ||
-          (p.serial || '').toLowerCase().includes(q) || (p.plateno || '').toLowerCase().includes(q) ||
-          (p.category || '').toLowerCase().includes(q) || (p.brand || '').toLowerCase().includes(q)) &&
+        (!q || String(p.name || '').toLowerCase().includes(q) || String(p.propno || '').toLowerCase().includes(q) ||
+          String(p.dept || '').toLowerCase().includes(q) || String(p.custodian || '').toLowerCase().includes(q) ||
+          String(p.serial || '').toLowerCase().includes(q) || String(p.plateno || '').toLowerCase().includes(q) ||
+          String(p.category || '').toLowerCase().includes(q) || String(p.brand || '').toLowerCase().includes(q)) &&
         (!fs || p.status === fs) &&
         (!ft || p.doctype === ft) &&
         (!fd || p.dept === fd) &&
@@ -13052,16 +13034,16 @@
         const _fc = p.fundcluster ? fundClusters.find(fc => fc.code === p.fundcluster) : null;
 
         return `<tr>
-          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${idx}</td>
-          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${esc(p.propno)}</td>
-          <td style="padding:6px; border:1px solid #000; vertical-align:top;">
+          <td style="padding:6px; text-align:center; border:1px solid #bbb; font-size:10px; vertical-align:top;">${idx}</td>
+          <td style="padding:6px; text-align:center; border:1px solid #bbb; font-size:10px; vertical-align:top;">${esc(p.propno)}</td>
+          <td style="padding:6px; border:1px solid #bbb; vertical-align:top;">
             <div style="font-weight:700; font-size:11px; text-transform:uppercase; margin-bottom:2px;">${esc(p.name)}</div>
             <div style="font-size:9.5px; line-height:1.3;">${descLines}</div>
           </td>
-          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top;">${qty}</td>
-          <td style="padding:6px; text-align:center; border:1px solid #000; font-size:10px; vertical-align:top; text-transform:uppercase;">${esc(p.unit || 'unit')}</td>
-          <td style="padding:6px; text-align:right; border:1px solid #000; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(p.cost)}</td>
-          <td style="padding:6px; text-align:right; border:1px solid #000; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(total)}</td>
+          <td style="padding:6px; text-align:center; border:1px solid #bbb; font-size:10px; vertical-align:top;">${qty}</td>
+          <td style="padding:6px; text-align:center; border:1px solid #bbb; font-size:10px; vertical-align:top; text-transform:uppercase;">${esc(p.unit || 'unit')}</td>
+          <td style="padding:6px; text-align:right; border:1px solid #bbb; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(p.cost)}</td>
+          <td style="padding:6px; text-align:right; border:1px solid #bbb; font-size:10px; vertical-align:top; white-space:nowrap;">&#8369;&nbsp;${fmtNum(total)}</td>
         </tr>`;
       };
 
@@ -13092,7 +13074,7 @@
         const _desig = desig && desig.trim() ? esc(desig) : '&nbsp;';
         const _dept = dept && dept.trim() ? esc(dept) : '&nbsp;';
         return `
-    <td style="width:33.33%; padding:15px 10px 10px; vertical-align:top; border:1px solid #000; border-top:none; text-align:center;">
+    <td style="width:50%; padding:15px 10px 10px; vertical-align:top; border:1px solid #000; border-top:none; text-align:center;">
       <div style="font-size:10px; font-weight:700; text-transform:uppercase; text-align:left; margin-bottom:45px;">${label}</div>
       <div style="display:inline-block; width:90%;">
         <div style="font-weight:700; font-size:12px; text-transform:uppercase; border-bottom:1px solid #000; padding-bottom:2px; margin-bottom:2px;">${_name}</div>
@@ -13182,7 +13164,6 @@
       <tr>
         ${sigCell('Received by:', officerName, officer.designation, toTitleCase(officer.dept || ''))}
         ${sigCell('Issued by:', refProp.issuedby, refProp.issuedpos, toTitleCase((issuedOfficer && issuedOfficer.dept) || ''))}
-        ${sigCell('Noted by:', refProp.notedby, refProp.notedpos, toTitleCase((notedOfficer && notedOfficer.dept) || ''))}
       </tr>
     </table>
 
