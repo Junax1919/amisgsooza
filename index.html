@@ -4515,35 +4515,6 @@
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;">
-            <!-- General settings -->
-            <div class="settings-card" style="max-width:none;">
-              <div class="form-section" style="margin-top:0;">General</div>
-              <div class="form-grid">
-                <div class="fg">
-                  <label>City / LGU Name</label>
-                  <input type="text" id="settingCity" value="City of Ozamiz"
-                    onchange="document.querySelector('.brand-name').textContent=this.value">
-                </div>
-                <div class="fg">
-                  <label>Fiscal Year</label>
-                  <input type="text" value="2025">
-                </div>
-                <div class="fg">
-                  <label>PAR Threshold (₱)</label>
-                  <input type="number" id="settingPAR" value="15000">
-                  <span class="field-hint">Properties ≥ this value use PAR</span>
-                </div>
-                <div class="fg">
-                  <label>Current Semester</label>
-                  <select class="fs">
-                    <option>1st Semester 2025</option>
-                    <option>2nd Semester 2025</option>
-                  </select>
-                </div>
-              </div>
-              <div class="divider"></div>
-              <button class="btn btn-primary" onclick="showToast('Settings saved.','success')">Save Changes</button>
-            </div>
             <!-- Current session info -->
             <div class="settings-card" style="max-width:none;">
               <div class="form-section" style="margin-top:0;">Current Session</div>
@@ -4584,6 +4555,58 @@
                   Sign Out
                 </button>
               </div>
+            </div>
+            </div>
+            <!-- Agency Information -->
+            <div class="settings-card" style="grid-column: 1 / -1;">
+              <div class="form-section" style="margin-top:0;">Agency Information</div>
+              <div class="form-grid">
+                <div class="fg">
+                  <label>Agency Name</label>
+                  <input type="text" id="ai-agencyName">
+                </div>
+                <div class="fg">
+                  <label>Address</label>
+                  <input type="text" id="ai-address">
+                </div>
+                <div class="fg">
+                  <label>City</label>
+                  <input type="text" id="ai-city">
+                </div>
+                <div class="fg">
+                  <label>Province</label>
+                  <input type="text" id="ai-province">
+                </div>
+                <div class="fg">
+                  <label>Postal Code</label>
+                  <input type="text" id="ai-postalCode">
+                </div>
+                <div class="fg">
+                  <label>Country</label>
+                  <input type="text" id="ai-country">
+                </div>
+                <div class="fg">
+                  <label>Phone No.</label>
+                  <input type="text" id="ai-phone">
+                </div>
+                <div class="fg">
+                  <label>Email Address</label>
+                  <input type="text" id="ai-email">
+                </div>
+                <div class="fg">
+                  <label>Website</label>
+                  <input type="text" id="ai-website">
+                </div>
+                <div class="fg">
+                  <label>Data Integration</label>
+                  <select id="ai-dataIntegration" class="fs" style="width:100%;">
+                    <option value="Enabled">Enabled</option>
+                    <option value="Disabled">Disabled</option>
+                  </select>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <button class="btn btn-primary" onclick="saveAgencyInfoBtn(event)">Save Changes</button>
             </div>
           </div>
         </div>
@@ -6533,6 +6556,7 @@
     }
     let departments = [];  // sourced from Database — populated via hydrateData()
     let auditLog = [];
+    let agencyInfo = [];
 
     let editingId = null;
     let currentPage = 1;
@@ -7535,7 +7559,7 @@
     }
 
     function buildPARDoc(p) {
-      const lgu = (document.getElementById('settingCity') || { value: 'LGU' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
+      const lgu = (document.getElementById('agencyName') || { value: 'LGU' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
       const qty = parseInt(p.qty) || 1;
       const totalAmt = qty * (parseFloat(p.cost) || 0);
       const _fcEntry = p.fundcluster ? fundClusters.find(fc => fc.code === p.fundcluster) : null;
@@ -7720,7 +7744,7 @@
     }
 
     function buildICSDoc(p) {
-      const lgu = (document.getElementById('settingCity') || { value: 'City of Ozamiz' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
+      const lgu = (document.getElementById('agencyName') || { value: 'City of Ozamiz' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
       const qty = parseInt(p.qty) || 1;
       const totalAmt = qty * (parseFloat(p.cost) || 0);
       const _fcEntry = p.fundcluster ? fundClusters.find(fc => fc.code === p.fundcluster) : null;
@@ -8190,7 +8214,7 @@
       const semester = (document.getElementById('invSemester') || { value: '—' }).value;
       const deptSel = (document.getElementById('invDeptFilter') || { value: '' }).value;
       const deptLabel = deptSel ? toTitleCase(deptSel) : 'All Departments';
-      const lgu = (document.getElementById('settingCity') || { value: 'LGU' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
+      const lgu = (document.getElementById('agencyName') || { value: 'LGU' }).value.replace(/^city of\s*/i, '').toUpperCase().trim();
 
       // Print all filtered rows (ignore pagination)
       const rows = invFiltered;
@@ -10827,7 +10851,7 @@
     function printAuditLog() {
       const list = _getFilteredAuditLog();
       if (!list.length) { showToast('No audit entries to print.', 'error'); return; }
-      const city = (document.getElementById('settingCity') || { value: 'LGU' }).value;
+      const city = (document.getElementById('agencyName') || { value: 'LGU' }).value;
       const CM = {
         ADD: '#16a34a', EDIT: '#2563eb', DELETE: '#dc2626', LOGIN: '#d97706', LOGOUT: '#6b7280',
         PRINT: '#7c3aed', EXPORT: '#7c3aed', IMPORT: '#d97706', TRANSFER: '#d97706', PRS: '#d97706'
@@ -11622,6 +11646,10 @@
       }
       if (d.systemUsers && d.systemUsers.length) systemUsers = d.systemUsers;
       if (d.auditLog && d.auditLog.length) auditLog = d.auditLog;
+      if (Array.isArray(d.agencyInfo)) {
+        agencyInfo = d.agencyInfo;
+        populateAgencyInfoSettings();
+      }
       if (Array.isArray(d.prsRecords)) prsRecords = d.prsRecords;
 
       // Rebuild propHistory from flat history entries array
@@ -11655,6 +11683,54 @@
       populateAcctStatusDropdown();
       renderUsers();
       updateSidebarUser();
+    }
+
+    function populateAgencyInfoSettings() {
+      const data = (agencyInfo && agencyInfo.length) ? agencyInfo[0] : null;
+      if (!data) return;
+      ['agencyName', 'address', 'city', 'province', 'postalCode', 'country', 'phone', 'email', 'website'].forEach(k => {
+        const el = document.getElementById('ai-' + k);
+        if (el) el.value = data[k] || '';
+      });
+      const diEl = document.getElementById('ai-dataIntegration');
+      if (diEl) diEl.value = data.dataIntegration || 'Disabled';
+    }
+
+    async function saveAgencyInfoBtn(event) {
+      if (!GAS_ONLINE) {
+        showToast('System is offline. Cannot save agency info.', 'error');
+        return;
+      }
+      const btn = event ? event.currentTarget : null;
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+      
+      const payload = {
+        id: (agencyInfo && agencyInfo.length > 0 && agencyInfo[0].id) ? agencyInfo[0].id : String(Date.now()),
+      };
+      ['agencyName', 'address', 'city', 'province', 'postalCode', 'country', 'phone', 'email', 'website'].forEach(k => {
+        const el = document.getElementById('ai-' + k);
+        if (el) payload[k] = el.value.trim();
+      });
+      const diEl = document.getElementById('ai-dataIntegration');
+      if (diEl) payload.dataIntegration = diEl.value;
+
+      try {
+        const res = await gasCall('saveAgencyInfo', payload);
+        if (btn) { btn.disabled = false; btn.textContent = 'Save Changes'; }
+        if (res && res.ok) {
+          showToast('Agency Information saved successfully.', 'success');
+          if (agencyInfo && agencyInfo.length) {
+            Object.assign(agencyInfo[0], payload);
+          } else {
+            agencyInfo = [payload];
+          }
+        } else {
+          showToast('Failed to save: ' + ((res && res.error) || 'Unknown error'), 'error');
+        }
+      } catch (err) {
+        if (btn) { btn.disabled = false; btn.textContent = 'Save Changes'; }
+        showToast('Network error saving Agency Info.', 'error');
+      }
     }
 
     function renderAuditLog() {
@@ -13312,7 +13388,7 @@
     }
 
     function buildConsolidatedDoc(officerName, assigned, officer) {
-      const lgu = (document.getElementById('settingCity') || { value: 'LGU' }).value
+      const lgu = (document.getElementById('agencyName') || { value: 'LGU' }).value
         .replace(/^city of\s*/i, '').toUpperCase().trim();
       const today = new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -14009,7 +14085,7 @@
 
     // ── PRS document builder (matches sample image layout) ─────────
     function buildPRSDoc(r) {
-      const lgu = (document.getElementById('settingCity') || { value: 'City of Ozamiz' }).value.toUpperCase().trim();
+      const lgu = (document.getElementById('agencyName') || { value: 'City of Ozamiz' }).value.toUpperCase().trim();
       const prov = (document.getElementById('settingProvince') || { value: '' }).value.toUpperCase().trim() || 'MISAMIS OCCIDENTAL';
       const today = new Date(r.prsDate || Date.now()).toLocaleDateString('en-PH',
         { year: 'numeric', month: 'long', day: 'numeric' });

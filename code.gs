@@ -72,6 +72,7 @@ const SH = {
   USERS        : 'Users',
   AUDIT_LOG    : 'AuditLog',
   CONFIG       : 'Config',
+  AGENCY_INFO  : 'AgencyInfo',
 };
 
 // ─── ❸  COLUMN HEADERS ────────────────────────────────────────────
@@ -121,6 +122,7 @@ const HDR = {
   USERS: ['id','name','username','password','email','dept','designation','role','status','permissions','createdAt','lastLogin'],
   AUDIT_LOG: ['id','ts','action','property','user','details'],
   CONFIG    : ['key','value'],
+  AGENCY_INFO: ['id', 'agencyName', 'address', 'city', 'province', 'postalCode', 'country', 'phone', 'email', 'website', 'dataIntegration'],
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -248,6 +250,7 @@ function doPost(e) {
       case 'saveRealProperty':   return jsonOut(saveRealProperty(payload,sess));
       case 'deleteRealProperty': return jsonOut(deleteRecord(SH.REAL_PROP,payload.id,sess,'Real Property'));
       case 'saveHistory':        return jsonOut(saveHistory(payload,sess));
+      case 'saveAgencyInfo':     return jsonOut(saveAgencyInfo(payload,sess));
       case 'getHistory':         return jsonOut(getHistory(payload.propId));
       case 'uploadPDF':          return jsonOut(uploadPDF(payload,sess));
       case 'deletePDF':          return jsonOut(deletePDF(payload,sess));
@@ -341,7 +344,7 @@ function getRefData() {
     const sheets = _readAllSheets([
       SH.OFFICERS, SH.DEPARTMENTS, SH.PPE_MAIN, SH.PPE_SUB,
       SH.FUND_CLUSTERS, SH.CONDITIONS, SH.ACQUISITIONS,
-      SH.ACCT_STATUSES, SH.USERS, SH.CONFIG,
+      SH.ACCT_STATUSES, SH.USERS, SH.CONFIG, SH.AGENCY_INFO,
     ]);
     const cfg = {};
     (sheets[SH.CONFIG]||[]).forEach(r=>{ if(r.key) cfg[r.key]=r.value; });
@@ -356,6 +359,7 @@ function getRefData() {
       acctStatuses     : sheets[SH.ACCT_STATUSES],
       systemUsers      : sheets[SH.USERS].map(stripPassword),
       config           : cfg,
+      agencyInfo       : sheets[SH.AGENCY_INFO],
     }};
   } catch(err) { logErr('getRefData',err); return {ok:false,error:err.message}; }
 }
@@ -433,6 +437,7 @@ function _buildFullDataset() {
     systemUsers      : sheets[SH.USERS].map(stripPassword),
     auditLog         : sheets[SH.AUDIT_LOG],
     config           : cfg,
+    agencyInfo       : sheets[SH.AGENCY_INFO],
   };
 }
 
@@ -693,6 +698,13 @@ function saveRow(sheetName,obj,sess,label) {
 function deleteRecord(sheetName,id,sess,label) {
   requirePerm(sess,['manage_config']); deleteById(sheetName,id);
   audit('DELETE',label,'Deleted '+label+' id='+id, sess.username); return {ok:true};
+}
+function saveAgencyInfo(payload, sess) {
+  requirePerm(sess, ['manage_config']);
+  if (!payload.id) payload.id = '1';
+  upsertRow(SH.AGENCY_INFO, payload);
+  audit('EDIT', 'Agency Info', 'Updated Agency Information', sess.username);
+  return {ok:true};
 }
 function requirePerm(sess,perms) {
   if(!sess) throw new Error('Not authenticated.');
