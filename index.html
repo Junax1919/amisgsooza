@@ -4200,20 +4200,16 @@
               <p>Complete transaction history for COA compliance and accountability</p>
             </div>
             <div class="page-head-actions">
-              <div class="export-btn-group">
-                <button class="btn btn-ghost" onclick="exportAuditLogCSV()" title="Export audit log as CSV">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
-                  Export CSV
-                </button>
-                <button class="btn btn-ghost" onclick="printAuditLog()" title="Print audit log report">
-                  <span class="nav-icon" style="font-size:15px;width:auto;">print</span>
-                  Print
-                </button>
-              </div>
+              <button class="btn btn-ghost" onclick="exportAuditLogCSV()" title="Export as CSV">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg> Export CSV
+              </button>
+              <button class="btn btn-ghost" onclick="printAuditLog()">
+                <span class="nav-icon" style="font-size:15px;width:auto;">print</span> Print
+              </button>
             </div>
           </div>
           <div class="card">
@@ -4223,8 +4219,8 @@
                 <span class="record-count" id="logCount">0 entries</span>
               </div>
               <div class="card-header-right" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                <input type="text" id="auditSearch" class="search-input" placeholder="Search property or details…"
-                  style="width:200px;" oninput="renderAuditLog()">
+                <input type="text" id="auditSearch" class="search-input" placeholder="Search..." style="width:180px;"
+                  oninput="renderAuditLog()">
                 <select class="filter-select" id="auditFilterUser" onchange="renderAuditLog()">
                   <option value="">All Users</option>
                 </select>
@@ -4241,18 +4237,20 @@
                   <option value="TRANSFER">Transfer</option>
                   <option value="PRS">PRS</option>
                 </select>
-                <input type="date" id="auditFilterDateFrom" class="filter-select" title="From date" onchange="renderAuditLog()" style="width:140px;">
-                <input type="date" id="auditFilterDateTo" class="filter-select" title="To date" onchange="renderAuditLog()" style="width:140px;">
-                <button class="btn btn-ghost btn-sm" onclick="clearAuditFilters()" title="Clear all filters">Clear</button>
+                <input type="date" id="auditDateFrom" class="filter-select" style="width:135px;"
+                  onchange="renderAuditLog()" title="From date">
+                <input type="date" id="auditDateTo" class="filter-select" style="width:135px;"
+                  onchange="renderAuditLog()" title="To date">
+                <button class="btn btn-ghost btn-sm" onclick="clearAuditFilters()">Clear</button>
               </div>
             </div>
             <table>
               <thead>
                 <tr>
-                  <th class="sortable" onclick="sortAuditLog('ts')" id="auditTh_ts">Timestamp</th>
-                  <th class="sortable" onclick="sortAuditLog('action')" id="auditTh_action">Action</th>
-                  <th class="sortable" onclick="sortAuditLog('property')" id="auditTh_property">Property / Module</th>
-                  <th class="sortable" onclick="sortAuditLog('user')" id="auditTh_user">User</th>
+                  <th class="sortable" id="auditTh_ts" onclick="sortAuditLog('ts')">Timestamp</th>
+                  <th class="sortable" id="auditTh_action" onclick="sortAuditLog('action')">Action</th>
+                  <th class="sortable" id="auditTh_property" onclick="sortAuditLog('property')">Property / Module</th>
+                  <th class="sortable" id="auditTh_user" onclick="sortAuditLog('user')">User</th>
                   <th>Details</th>
                 </tr>
               </thead>
@@ -4267,7 +4265,7 @@
                 </tr>
               </tbody>
             </table>
-            <div class="pagination" id="auditPagination" style="display:none;"></div>
+            <div id="auditPagination" class="pagination" style="display:none;"></div>
           </div>
         </div>
 
@@ -4742,6 +4740,111 @@
 
           <!-- User cards grid -->
           <div class="users-grid" id="userGrid"></div>
+        </div>
+
+        <!-- ── AUDIT LOG PANEL ── -->
+        <div id="panel-logs" class="tab-panel">
+          <div class="page-head">
+            <div class="page-head-left">
+              <h1>Audit Log</h1>
+              <p>Transaction history — all user actions are recorded here</p>
+            </div>
+            <div class="page-head-actions">
+              <button class="btn btn-ghost" onclick="exportAuditLogCSV()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export CSV
+              </button>
+              <button class="btn btn-ghost" onclick="printAuditLog()">
+                <span class="nav-icon" style="font-size:15px;width:auto;">print</span>
+                Print
+              </button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-header-left">
+                <span class="card-title">Transaction History</span>
+                <span class="record-count" id="logCount">0 entries</span>
+              </div>
+            </div>
+            <!-- Filter row -->
+            <div class="filter-row">
+              <div class="search-wrap">
+                <span class="search-icon">&#9906;</span>
+                <input type="text" id="auditSearch" placeholder="Search property or details&#8230;"
+                  oninput="_auditPage=1;renderAuditLog()" style="min-width:220px;">
+              </div>
+              <select class="filter-select" id="auditFilterAction" onchange="_auditPage=1;renderAuditLog()"
+                style="max-width:160px;">
+                <option value="">All Actions</option>
+                <option>LOGIN</option>
+                <option>LOGOUT</option>
+                <option>ADD</option>
+                <option>EDIT</option>
+                <option>DELETE</option>
+                <option>PRINT</option>
+                <option>EXPORT</option>
+                <option>IMPORT</option>
+                <option>PRS</option>
+                <option>TRANSFER</option>
+              </select>
+              <select class="filter-select" id="auditFilterUser" onchange="_auditPage=1;renderAuditLog()"
+                style="max-width:180px;">
+                <option value="">All Users</option>
+              </select>
+              <input type="date" id="auditDateFrom" class="filter-select" title="From date"
+                onchange="_auditPage=1;renderAuditLog()" style="max-width:145px;">
+              <input type="date" id="auditDateTo" class="filter-select" title="To date"
+                onchange="_auditPage=1;renderAuditLog()" style="max-width:145px;">
+              <button class="btn btn-ghost btn-sm"
+                onclick="document.getElementById('auditSearch').value='';document.getElementById('auditFilterAction').value='';document.getElementById('auditFilterUser').value='';document.getElementById('auditDateFrom').value='';document.getElementById('auditDateTo').value='';_auditPage=1;renderAuditLog();"
+                title="Clear all filters">
+                <span class="nav-icon" style="font-size:14px;">filter_list_off</span>
+              </button>
+            </div>
+            <!-- Table -->
+            <table id="auditTable">
+              <thead>
+                <tr>
+                  <th id="auditTh_ts" class="sortable" onclick="auditSortBy('ts')" style="width:160px;">Date &amp; Time
+                  </th>
+                  <th id="auditTh_action" class="sortable" onclick="auditSortBy('action')" style="width:110px;">Action
+                  </th>
+                  <th id="auditTh_property" class="sortable" onclick="auditSortBy('property')" style="width:22%;">
+                    Property / Module</th>
+                  <th id="auditTh_user" class="sortable" onclick="auditSortBy('user')" style="width:140px;">User</th>
+                  <th style="">Details</th>
+                </tr>
+              </thead>
+              <tbody id="auditBody">
+                <tr>
+                  <td colspan="5">
+                    <div class="empty">
+                      <div class="empty-icon">&#9636;</div>
+                      <p>No audit log entries yet</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Pagination -->
+            <div class="pagination-wrap" style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+              <div id="auditPagination" class="pagination" style="display:none; margin-top:0;"></div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="text-sm text-muted">Rows per page:</span>
+                <select id="auditPerPage" class="filter-select" style="padding:4px 8px;" onchange="_auditPerPage=parseInt(this.value,10);_auditPage=1;renderAuditLog()">
+                  <option value="10">10</option>
+                  <option value="50" selected>50</option>
+                  <option value="100">100</option>
+                  <option value="1000">1000</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div><!-- /content -->
@@ -6430,6 +6533,7 @@
     }
     let departments = [];  // sourced from Database — populated via hydrateData()
     let auditLog = [];
+
     let editingId = null;
     let currentPage = 1;
     let perPage = 10;
@@ -6480,6 +6584,7 @@
       if (name === 'acquisition') renderAcquisitions();
       if (name === 'acctstatus') renderAcctStatuses();
       if (name === 'users') renderUsers();
+      if (name === 'logs') { _rebuildAuditUserFilter(); renderAuditLog(); }
     }
 
     /* ─────────────────────────────────────
@@ -6503,9 +6608,12 @@
        TABLE RENDER
     ───────────────────────────────────── */
     function getCurrentUser() {
+      if (typeof GAS_USER !== 'undefined' && GAS_USER && GAS_USER.username) return GAS_USER.username;
+      if (typeof GAS_USER !== 'undefined' && GAS_USER && GAS_USER.name) return GAS_USER.name;
       const el = document.getElementById('currentUserName');
-      return el ? el.textContent : 'GSO Staff';
+      return el ? el.textContent.trim() : 'GSO Staff';
     }
+
 
     function getFiltered() {
       const q = ((document.getElementById('searchInput') || {}).value || '').toLowerCase();
@@ -7160,7 +7268,24 @@
         const i = properties.findIndex(x => String(x.id) === String(editingId));
         if (i > -1) properties[i] = p;
         editingId = null;
-        addLog('EDIT', p.name, `Updated property record ${p.propno}`);
+        // Build field-level diff for EDIT audit log
+        const DIFF_FIELDS = [
+          { key: 'custodian', label: 'Custodian' }, { key: 'dept', label: 'Department' },
+          { key: 'status', label: 'Condition' }, { key: 'cost', label: 'Unit Cost' },
+          { key: 'location', label: 'Location' }, { key: 'name', label: 'Name' },
+          { key: 'doctype', label: 'Document Type' }, { key: 'brand', label: 'Brand' },
+          { key: 'serial', label: 'Serial/Model' }, { key: 'category', label: 'Category' },
+          { key: 'remarks', label: 'Remarks' },
+        ];
+        const diffs = [];
+        if (existing) {
+          DIFF_FIELDS.forEach(f => {
+            const ov = String(existing[f.key] || '').trim(), nv = String(p[f.key] || '').trim();
+            if (ov !== nv) diffs.push(f.label + ': "' + ov + '" → "' + nv + '"');
+          });
+        }
+        const editDetails = 'Prop No: ' + p.propno + (diffs.length ? ' | ' + diffs.join('; ') : '');
+        addLog('EDIT', p.name, editDetails);
         showToast('Property record updated.', 'success');
       } else {
         properties.push(p);
@@ -7372,7 +7497,7 @@
       // Clean up orphaned in-memory history and PDF store entries
       delete propHistory[id];
       delete pdfStore['prop:' + id];
-      addLog('DELETE', p.name, `Removed property ${p.propno}`);
+      addLog('DELETE', p.name, `Deleted ${p.doctype || 'Property'} — Property No: ${p.propno}`);
       closeModal('viewModal');
       closeModal('deleteConfirmModal');
       // Reset to page 1 so we don't land on a now-empty page
@@ -7577,7 +7702,7 @@
       win.focus();
       setTimeout(() => { win.print(); }, 600);
       const _pPAR = properties.find(x => String(x.id) === String(currentPARId));
-      if (_pPAR) addLog('PRINT', _pPAR.name, `Printed PAR — ${_pPAR.propno}`);
+      if (_pPAR) addLog('PRINT', _pPAR.name, `Printed PAR -- ${_pPAR.propno}`);
     }
 
     /* ─────────────────────────────────────
@@ -7758,7 +7883,7 @@
       win.focus();
       setTimeout(() => { win.print(); }, 600);
       const _pICS = properties.find(x => String(x.id) === String(currentICSId));
-      if (_pICS) addLog('PRINT', _pICS.name, `Printed ICS — ${_pICS.propno}`);
+      if (_pICS) addLog('PRINT', _pICS.name, `Printed ICS -- ${_pICS.propno}`);
     }
 
 
@@ -9472,7 +9597,7 @@
       if (!r) return;
       realProperties = realProperties.filter(x => x.id !== id);
       delete pdfStore['rp:' + id];
-      addLog('DELETE', r.name, `Deleted real property record ${r.recno}`);
+      addLog('DELETE', r.name, `Deleted Real Property (${r.rtype || 'Real Property'}) -- ${r.recno}`);
       closeModal('deleteConfirmModal');
       showToast(`"${r.name}" deleted.`, 'error');
       renderRealProperty();
@@ -10614,14 +10739,15 @@
     /* ─────────────────────────────────────
        AUDIT LOG
     ───────────────────────────────────── */
-    // ── Audit log sort/page state ──────────────────────────────────────────────────
-    let auditSortCol = 'ts', auditSortDir = -1, auditPage = 1;
-    const AUDIT_PAGE_SIZE = 50;
+    // Audit log engine state
+    let _auditSortCol = 'ts', _auditSortDir = -1, _auditPage = 1;
+    let _auditPerPage = 50;
 
-    function auditBadgeCls(action) {
-      return { ADD:'green', EDIT:'blue', DELETE:'red', LOGIN:'gold', LOGOUT:'gray',
-               PRINT:'purple', EXPORT:'purple', IMPORT:'amber', TRANSFER:'amber', PRS:'amber'
-             }[(action||'').toUpperCase()] || 'gray';
+    function _auditBadge(a) {
+      return ({
+        ADD: 'green', EDIT: 'blue', DELETE: 'red', LOGIN: 'gold', LOGOUT: 'gray',
+        PRINT: 'purple', EXPORT: 'purple', IMPORT: 'amber', TRANSFER: 'amber', PRS: 'amber'
+      }[(a || '').toUpperCase()] || 'gray');
     }
 
     function addLog(action, property, details) {
@@ -10629,158 +10755,109 @@
       auditLog.unshift({ ts: new Date().toISOString(), action, property, user, details });
       _rebuildAuditUserFilter();
       const panel = document.getElementById('panel-logs');
-      if (panel && panel.classList.contains('active')) {
-        renderAuditLog();
-      } else {
-        const el = document.getElementById('logCount');
-        if (el) el.textContent = auditLog.length + ' entries';
-      }
+      if (panel && panel.classList.contains('active')) { renderAuditLog(); }
+      else { const el = document.getElementById('logCount'); if (el) el.textContent = auditLog.length + ' entries'; }
     }
 
     function _rebuildAuditUserFilter() {
-      const sel = document.getElementById('auditFilterUser');
-      if (!sel) return;
+      const sel = document.getElementById('auditFilterUser'); if (!sel) return;
       const cur = sel.value;
       const users = [...new Set(auditLog.map(l => l.user || '').filter(Boolean))].sort();
       sel.innerHTML = '<option value="">All Users</option>' +
-        users.map(u => `<option value="${esc(u)}"${u===cur?' selected':''} >${esc(u)}</option>`).join('');
+        users.map(u => `<option value="${esc(u)}"${u === cur ? ' selected' : ''}>${esc(u)}</option>`).join('');
     }
 
     function clearAuditFilters() {
-      ['auditSearch','auditFilterUser','auditFilterAction','auditFilterDateFrom','auditFilterDateTo']
-        .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
-      auditPage = 1;
-      renderAuditLog();
+      ['auditSearch', 'auditFilterUser', 'auditFilterAction', 'auditDateFrom', 'auditDateTo']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      _auditPage = 1; renderAuditLog();
     }
 
     function sortAuditLog(col) {
-      if (auditSortCol === col) auditSortDir = -auditSortDir;
-      else { auditSortCol = col; auditSortDir = col === 'ts' ? -1 : 1; }
-      auditPage = 1;
-      renderAuditLog();
+      if (_auditSortCol === col) _auditSortDir = -_auditSortDir;
+      else { _auditSortCol = col; _auditSortDir = col === 'ts' ? -1 : 1; }
+      _auditPage = 1; renderAuditLog();
     }
 
     function _getFilteredAuditLog() {
-      const q     = ((document.getElementById('auditSearch')        ||{}).value||'').toLowerCase().trim();
-      const fUser = ((document.getElementById('auditFilterUser')    ||{}).value||'');
-      const fAct  = ((document.getElementById('auditFilterAction')  ||{}).value||'');
-      const fFrom = ((document.getElementById('auditFilterDateFrom')||{}).value||'');
-      const fTo   = ((document.getElementById('auditFilterDateTo')  ||{}).value||'');
+      const q = ((document.getElementById('auditSearch') || {}).value || '').toLowerCase().trim();
+      const fU = ((document.getElementById('auditFilterUser') || {}).value || '');
+      const fA = ((document.getElementById('auditFilterAction') || {}).value || '');
+      const fFrom = ((document.getElementById('auditDateFrom') || {}).value || '');
+      const fTo = ((document.getElementById('auditDateTo') || {}).value || '');
       let list = auditLog.filter(l => {
-        if (fUser && (l.user||'') !== fUser) return false;
-        if (fAct  && (l.action||'').toUpperCase() !== fAct.toUpperCase()) return false;
-        if (q && !( String(l.property||'').toLowerCase().includes(q) ||
-                    String(l.details||'').toLowerCase().includes(q)  ||
-                    String(l.user||'').toLowerCase().includes(q)     ||
-                    String(l.action||'').toLowerCase().includes(q))) return false;
-        if (fFrom||fTo) {
-          const ts = l.ts ? new Date(l.ts) : null;
-          if (!ts||isNaN(ts)) return false;
-          const day = ts.toISOString().slice(0,10);
-          if (fFrom && day < fFrom) return false;
-          if (fTo   && day > fTo)   return false;
+        if (fU && (l.user || '') !== fU) return false;
+        if (fA && (l.action || '').toUpperCase() !== fA.toUpperCase()) return false;
+        if (q && !(String(l.property || '').toLowerCase().includes(q) ||
+          String(l.details || '').toLowerCase().includes(q) ||
+          String(l.user || '').toLowerCase().includes(q) ||
+          String(l.action || '').toLowerCase().includes(q))) return false;
+        if (fFrom || fTo) {
+          const d = l.ts ? new Date(l.ts) : null; if (!d || isNaN(d)) return false;
+          const day = d.toISOString().slice(0, 10);
+          if (fFrom && day < fFrom) return false; if (fTo && day > fTo) return false;
         }
         return true;
       });
-      list.sort((a,b) => {
-        let av=a[auditSortCol]||'', bv=b[auditSortCol]||'';
-        return av<bv ? -auditSortDir : av>bv ? auditSortDir : 0;
+      list.sort((a, b) => {
+        let av = a[_auditSortCol] || '', bv = b[_auditSortCol] || '';
+        return av < bv ? -_auditSortDir : av > bv ? _auditSortDir : 0;
       });
       return list;
     }
 
-    function renderLogs() { renderAuditLog(); } // legacy alias
-
-    function renderAuditLog() {
-      _rebuildAuditUserFilter();
-      // Update sort arrow classes on headers
-      ['ts','action','property','user'].forEach(col => {
-        const th = document.getElementById('auditTh_'+col);
-        if (!th) return;
-        th.className = 'sortable';
-        if (col === auditSortCol) th.classList.add(auditSortDir===1?'sort-asc':'sort-desc');
-      });
-      const filtered = _getFilteredAuditLog();
-      const total = filtered.length;
-      const totalPages = Math.max(1, Math.ceil(total / AUDIT_PAGE_SIZE));
-      if (auditPage > totalPages) auditPage = totalPages;
-      const el = document.getElementById('logCount');
-      if (el) el.textContent = total + ' entr'+(total===1?'y':'ies') +
-        (total < auditLog.length ? ' (filtered from '+auditLog.length+')' : '');
-      const body = document.getElementById('auditBody');
-      if (!body) return;
-      if (!total) {
-        body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">▤</div><p>No transactions match current filters</p></div></td></tr>`;
-        _renderAuditPagination(0, 1); return;
-      }
-      const start = (auditPage-1)*AUDIT_PAGE_SIZE;
-      const page  = filtered.slice(start, start+AUDIT_PAGE_SIZE);
-      body.innerHTML = page.map(l => {
-        const cls = auditBadgeCls(l.action);
-        let ts = l.ts || '';
-        try { const d=new Date(l.ts); if(!isNaN(d)) ts=d.toLocaleString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(_){}
-        return `<tr>
-          <td class="text-muted text-sm" style="white-space:nowrap;">${ts}</td>
-          <td><span class="badge badge-${cls}">${esc(l.action||'')}</span></td>
-          <td class="cell-primary">${esc(l.property||'')}</td>
-          <td class="text-muted"><span style="display:inline-flex;align-items:center;gap:4px;"><span class="nav-icon" style="font-size:13px;color:var(--text-3);">person</span>${esc(l.user||'—')}</span></td>
-          <td class="text-muted text-sm" style="max-width:340px;word-break:break-word;">${esc(l.details||'')}</td>
-        </tr>`;
-      }).join('');
-      _renderAuditPagination(total, totalPages);
-    }
-
-    function _renderAuditPagination(total, totalPages) {
-      const pg = document.getElementById('auditPagination');
-      if (!pg) return;
-      if (totalPages <= 1) { pg.style.display='none'; return; }
-      pg.style.display='flex';
-      const mkBtn = (lbl,p,dis,act) => `<button class="page-btn${act?' active':''}" ${dis?'disabled':''} onclick="auditPage=${p};renderAuditLog()">${lbl}</button>`;
-      let html = mkBtn('&laquo;',1,auditPage===1,false)+mkBtn('&lsaquo;',auditPage-1,auditPage===1,false);
-      const s=Math.max(1,auditPage-2), e=Math.min(totalPages,auditPage+2);
-      for(let i=s;i<=e;i++) html+=mkBtn(i,i,false,i===auditPage);
-      html+=mkBtn('&rsaquo;',auditPage+1,auditPage===totalPages,false)+mkBtn('&raquo;',totalPages,auditPage===totalPages,false);
-      html+=`<span class="text-muted text-sm" style="margin-left:8px;">Page ${auditPage} of ${totalPages} &mdash; ${total} entries</span>`;
-      pg.innerHTML=html;
-    }
-
-    // ── Audit log export & print ──────────────────────────────────────────────
     function exportAuditLogCSV() {
       const list = _getFilteredAuditLog();
       if (!list.length) { showToast('No audit entries to export.', 'error'); return; }
-      const headers = ['Timestamp','Action','Property / Module','User','Details'];
+      const hdr = ['Timestamp', 'Action', 'Property / Module', 'User', 'Details'];
       const rows = list.map(l => {
-        let ts = l.ts||'';
-        try { const d=new Date(l.ts); if(!isNaN(d)) ts=d.toLocaleString('en-PH'); } catch(_){}
-        return [ts, l.action||'', l.property||'', l.user||'', l.details||''];
+        let ts = l.ts || '';
+        try { const d = new Date(l.ts); if (!isNaN(d)) ts = d.toLocaleString('en-PH'); } catch (_) { }
+        return [ts, l.action || '', l.property || '', l.user || '', l.details || ''];
       });
-      const csv = [headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+      const csv = [hdr, ...rows].map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
-      a.download = `AuditLog_${new Date().toISOString().slice(0,10)}.csv`;
+      a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' }));
+      a.download = `AuditLog_${new Date().toISOString().slice(0, 10)}.csv`;
       a.click();
-      showToast(`Exported ${list.length} audit entries as CSV.`, 'success');
       addLog('EXPORT', 'Audit Log', `Exported ${list.length} audit log entries as CSV`);
+      showToast(`Exported ${list.length} audit entries as CSV.`, 'success');
     }
 
     function printAuditLog() {
       const list = _getFilteredAuditLog();
       if (!list.length) { showToast('No audit entries to print.', 'error'); return; }
-      const city = (document.getElementById('settingCity')||{value:'LGU'}).value;
-      const clrMap = {ADD:'#16a34a',EDIT:'#2563eb',DELETE:'#dc2626',LOGIN:'#d97706',LOGOUT:'#6b7280',
-                      PRINT:'#7c3aed',EXPORT:'#7c3aed',IMPORT:'#d97706',TRANSFER:'#d97706',PRS:'#d97706'};
+      const city = (document.getElementById('settingCity') || { value: 'LGU' }).value;
+      const CM = {
+        ADD: '#16a34a', EDIT: '#2563eb', DELETE: '#dc2626', LOGIN: '#d97706', LOGOUT: '#6b7280',
+        PRINT: '#7c3aed', EXPORT: '#7c3aed', IMPORT: '#d97706', TRANSFER: '#d97706', PRS: '#d97706'
+      };
       const rows = list.map(l => {
-        let ts=l.ts||'';
-        try{const d=new Date(l.ts);if(!isNaN(d))ts=d.toLocaleString('en-PH',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch(_){}
-        const c=clrMap[(l.action||'').toUpperCase()]||'#6b7280';
-        return `<tr><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;white-space:nowrap;">${ts}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;"><span style="font-weight:700;font-size:11px;color:${c};">${l.action||''}</span></td><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${l.property||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${l.user||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${l.details||''}</td></tr>`;
+        let ts = l.ts || '';
+        try { const d = new Date(l.ts); if (!isNaN(d)) ts = d.toLocaleString('en-PH', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { }
+        const c = CM[(l.action || '').toUpperCase()] || '#555';
+        return `<tr><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;white-space:nowrap;">${ts}</td>` +
+          `<td style="padding:5px 8px;border-bottom:1px solid #eee;"><b style="color:${c};">${esc(l.action || '')}</b></td>` +
+          `<td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${esc(l.property || '')}</td>` +
+          `<td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${esc(l.user || '')}</td>` +
+          `<td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:11px;">${esc(l.details || '')}</td></tr>`;
       }).join('');
-      const win = window.open('','_blank','width=1100,height=750');
-      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit Log</title><style>body{font-family:Arial,sans-serif;font-size:12px;margin:16px;}table{width:100%;border-collapse:collapse;}th{background:#1a1a18;color:#fff;padding:7px 8px;font-size:11px;text-align:left;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><h2 style="margin:0 0 4px;">${city} — Audit Log / Transaction History</h2><p style="margin:0 0 12px;color:#555;font-size:11px;">Printed: ${new Date().toLocaleString('en-PH')} &nbsp;|&nbsp; ${list.length} entries</p><table><thead><tr><th>Timestamp</th><th>Action</th><th>Property / Module</th><th>User</th><th>Details</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+      const win = window.open('', '_blank', 'width=1050,height=750');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit Log</title><style>` +
+        `body{font-family:Arial,sans-serif;font-size:12px;margin:16px;}` +
+        `table{width:100%;border-collapse:collapse;}th{background:#1a1a18;color:#fff;padding:7px 8px;text-align:left;font-size:11px;}` +
+        `@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}` +
+        `</style></head><body>` +
+        `<h2 style="margin:0 0 4px;">${esc(city)} -- Audit Log / Transaction History</h2>` +
+        `<p style="margin:0 0 12px;color:#555;font-size:11px;">Printed: ${new Date().toLocaleString('en-PH')} | ${list.length} entries</p>` +
+        `<table><thead><tr><th>Timestamp</th><th>Action</th><th>Property / Module</th><th>User</th><th>Details</th></tr></thead>` +
+        `<tbody>${rows}</tbody></table></body></html>`);
       win.document.close(); win.focus();
-      setTimeout(() => { win.print(); }, 600);
-      addLog('PRINT', 'Audit Log', `Printed audit log report — ${list.length} entries`);
+      setTimeout(() => { win.print(); }, 500);
+      addLog('PRINT', 'Audit Log', `Printed audit log report -- ${list.length} entries`);
     }
+
+    function renderLogs() { renderAuditLog(); }
 
     /* ─────────────────────────────────────
        EXPORT
@@ -11580,7 +11657,54 @@
       updateSidebarUser();
     }
 
-    // renderAuditLog is defined in the AUDIT LOG section above
+    function renderAuditLog() {
+      _rebuildAuditUserFilter();
+      ['ts', 'action', 'property', 'user'].forEach(col => {
+        const th = document.getElementById('auditTh_' + col); if (!th) return;
+        th.className = 'sortable';
+        if (col === _auditSortCol) th.classList.add(_auditSortDir === 1 ? 'sort-asc' : 'sort-desc');
+      });
+      const filtered = _getFilteredAuditLog();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / _auditPerPage));
+      if (_auditPage > totalPages) _auditPage = totalPages;
+      const el = document.getElementById('logCount');
+      if (el) el.textContent = total + ' entr' + (total === 1 ? 'y' : 'ies') +
+        (total < auditLog.length ? ' (filtered from ' + auditLog.length + ')' : '');
+      const body = document.getElementById('auditBody'); if (!body) return;
+      if (!total) {
+        body.innerHTML = `<tr><td colspan="5"><div class="empty"><div class="empty-icon">▤</div><p>No transactions match the current filters</p></div></td></tr>`;
+        _renderAuditPagination(0, 1); return;
+      }
+      const start = (_auditPage - 1) * _auditPerPage;
+      const page = filtered.slice(start, start + _auditPerPage);
+      body.innerHTML = page.map(l => {
+        const cls = _auditBadge(l.action);
+        let ts = l.ts || '';
+        try { const d = new Date(l.ts); if (!isNaN(d)) ts = d.toLocaleString('en-PH', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { }
+        return `<tr>
+          <td class="text-muted text-sm" style="white-space:nowrap;">${ts}</td>
+          <td><span class="badge badge-${cls}">${esc(l.action || '')}</span></td>
+          <td class="cell-primary">${esc(l.property || '')}</td>
+          <td class="text-muted"><span style="display:inline-flex;align-items:center;gap:4px;">`+
+          `<span class="nav-icon" style="font-size:13px;color:var(--text-3);">person</span>${esc(l.user || '--')}</span></td>
+          <td class="text-muted text-sm" style="max-width:340px;word-break:break-word;">${esc(l.details || '')}</td>
+        </tr>`;
+      }).join('');
+      _renderAuditPagination(total, totalPages);
+    }
+    function _renderAuditPagination(total, totalPages) {
+      const pg = document.getElementById('auditPagination'); if (!pg) return;
+      if (totalPages <= 1) { pg.style.display = 'none'; return; }
+      pg.style.display = 'flex';
+      const btn = (lbl, p, dis, act) => `<button class="page-btn${act ? ' active' : ''}" ${dis ? 'disabled' : ''} onclick="_auditPage=${p};renderAuditLog()">${lbl}</button>`;
+      let html = btn('&laquo;', 1, _auditPage === 1, false) + btn('&lsaquo;', _auditPage - 1, _auditPage === 1, false);
+      const s2 = Math.max(1, _auditPage - 2), e2 = Math.min(totalPages, _auditPage + 2);
+      for (let i = s2; i <= e2; i++) html += btn(i, i, false, i === _auditPage);
+      html += btn('&rsaquo;', _auditPage + 1, _auditPage === totalPages, false) + btn('&raquo;', totalPages, _auditPage === totalPages, false);
+      html += `<span class="text-muted text-sm" style="margin-left:8px;">Page ${_auditPage} of ${totalPages} &mdash; ${total} entries</span>`;
+      pg.innerHTML = html;
+    }
 
     // ──────────────────────────────────────────────────────────────────
     //  ❾  EXPORT ALL DATA  — for seeding the backend via importInitialData()
@@ -13391,8 +13515,9 @@
       win.document.close();
       win.focus();
       setTimeout(() => { win.print(); }, 700);
-      addLog('PRINT', _consolidatedOfficerName, `Printed Consolidated Accountability Report — ${assigned.length} items`);
-    }// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      addLog('PRINT', _consolidatedOfficerName || 'Consolidated',
+        `Printed Consolidated Accountability Report`);
+    }// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     //  REPORTS PANEL — Consolidated Accountability Report picker
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -13828,6 +13953,9 @@
       prsRecords = prsRecords.filter(r => String(r.id) !== String(id));
       renderPRS();
       showToast('PRS record deleted.', 'error');
+      addLog('DELETE', deleted.name || 'Unknown Property',
+        `Deleted PRS ${deleted.prsNo || 'N/A'} -- ${deleted.propno || 'N/A'}`
+        + (deleted.prsPurpose ? ` (${deleted.prsPurpose})` : ''));
       if (GAS_ONLINE) {
         gasCall('deletePRS', { id })
           .then(res => {
@@ -13876,7 +14004,7 @@
       win.document.close();
       win.focus();
       setTimeout(() => { win.print(); }, 600);
-      if (r) addLog('PRINT', r.name, `Printed PRS — ${r.prsNo} (${r.prsPurpose})`);
+      if (r) addLog('PRINT', r.name, `Printed PRS -- ${r.prsNo || ''} (${r.prsPurpose || ''})`);
     }
 
     // ── PRS document builder (matches sample image layout) ─────────
